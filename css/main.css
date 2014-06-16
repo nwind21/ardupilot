@@ -1,0 +1,240 @@
+/*
+ * Globals
+ */
+
+/* Links 
+a,
+a:focus,
+a:hover {
+  color: #fff;
+}
+*/
+
+/* Custom default button 
+.btn-default,
+.btn-default:hover,
+.btn-default:focus {
+  color: #333;
+  text-shadow: none;
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+*/
+.btn-default:hover,
+.btn-default:focus {
+    color: white;
+    background-color: #66CC33;
+}
+
+.cover-heading {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.small-lead {
+    font-size: 16px;
+}
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+    height: 100%;
+    background-color: #eee;
+}
+body {
+    color: #000;
+}
+
+
+/* Padding for spacing */
+.inner {
+  padding: 30px;
+}
+
+
+/*
+ * Header
+ */
+.navbar-spacer {
+    height:  50px;
+}
+.navbar-default {
+    margin-bottom: 10px;
+    color: #000;
+    background-color: transparent;  
+}
+.navbar-default .navbar-brand > li {
+  display: inline-block;
+  margin-left: 0px;
+}
+.navbar-default .navbar-brand > li + li {
+  margin-left: 0px;
+}
+/* title */
+.navbar-default .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 0px;
+}
+.navbar-default .navbar-nav  > li > a {
+    padding-right: 0px;
+    padding-left: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000; /* IE8 proofing */
+    color: rgba(0,0,0,.75);
+    border-bottom: 2px solid transparent;
+}
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  font-size: 36px;
+  color: #3366CC;
+  background-color: transparent;
+}
+
+.navbar-default 
+.navbar-default{
+  color: #000;
+  background-color: transparent;
+  border-bottom-color: rgba(51,102,204,.25);
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #000;
+  background-color: transparent;
+  border-bottom-color: rgba(51,102,204,.25);
+}
+
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #000;
+  background-color: transparent;
+  border-bottom-color: #3366CC;
+}
+
+.nav > li {
+    margin-left: 30px;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: transparent;
+}
+
+.dropdown-menu   {
+   background-color: #333;
+   background-color: transparent;
+}
+.dropdown-menu > li > a {
+   color: #ccc;
+   border-bottom: 2px solid transparent;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+   color: #000;
+   background-color: transparent;
+   border-bottom-color: rgba(255,255,255,.25);
+}
+
+@media (min-width: 768px) {
+
+  .navbar-brand {
+    float: left;
+  }
+  .navbar-nav {
+    float: right;
+    padding-right: 30px;
+  }
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  color: black;
+}
+
+.blog-image {
+}
+
+.blog-title {
+    font-weight: bold;
+    margin-bottom:30px;
+    font-size: 40px;
+
+}
+
+.blog-post-date {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: black;
+    text-align: right;
+    border-bottom: 2px solid transparent;
+    border-bottom-color: #666;
+}
+
+.blog-post-date-small {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #666;
+    text-align: right;
+}
+
+/*
+ * Footer
+ */
+
+.mastfoot {
+  color: #999; /* IE8 proofing */
+  color: rgba(255,255,255,.5);
+}
+
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+  /* Pull out the header and footer */
+  .masthead {
+    position: fixed;
+    top: 0;
+  }
+  .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
+  /* Start the vertical centering */
+  .site-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
+}
+
+@media (min-width: 992px) {
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 700px;
+  }
+}
