@@ -172,6 +172,10 @@ h1, .h1 {
   margin-bottom: 30px;
 }
 
+.popover {
+    max-width: 2000px;
+}
+
 div.hline {
     margin-top: 30px;
     border-bottom: solid #CCCCCC;

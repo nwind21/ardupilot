@@ -5,5 +5,23 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="{{site.url}}/js/bootstrap.min.js"></script>
+    <script>
+      $( document ).ready(function() {
+        $('.img-thumbnail').popover({
+          html: true,
+          trigger: 'click',
+          placement: 'auto',
+          content: function () {
+            return '<img class="img-thumbnail" style="float:right;width:1024px;max-width:1024px;" src="' + $(this)[0].src + '" />'
+          }
+        });
+      });
+    $('html').on('click', function(e) {
+      if (typeof $(e.target).data('original-title') == 'undefined' &&
+         !$(e.target).parents().is('.popover.in')) {
+        $('[data-original-title]').popover('hide');
+      }
+    });
+    </script>
   </body>
 </html>
