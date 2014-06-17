@@ -167,6 +167,10 @@ h6, .h6 {
   color: black;
 }
 
+h1, .h1 {
+  margin-bottom: 30px;
+}
+
 .blog-image {
 }
 
