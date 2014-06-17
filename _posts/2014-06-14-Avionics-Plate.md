@@ -7,8 +7,8 @@ layout: posts
 
 The goal was to create an avionics plate to mount an [Arduino Uno](http://www.adafruit.com/products/50) and the [GPS Mast](https://store.3drobotics.com/products/gps-mast) to the Iris.  I considered a variety of options:
 
-* Mount to the shell.  The curvature would prove a problem modeling and it would require some CAD work with a 3D printer.  No go on this idea.
-* Mount to the underbelly.  The Iris already sits pretty low and the GPS mast would needs to be elevated. Ditched this idea quick since I wanted both the Uno and the mast on one plate.
+* Mount to the shell.  The curvature would probably be problematic to model and it would require some CAD work with a 3D printer.  No go on this idea.
+* Mount to the underbelly.  The Iris already sits pretty low and the GPS mast needs to be elevated. Ditched this idea quick since I wanted both the Uno and the mast on one plate.
 * Velcro to the shell.  Well, this would just look horrible.
 * Make a 2D plate and drill holes with long stand-offs into the Iris' upper plate.  This was the winner.
 
@@ -16,7 +16,7 @@ The Uno would drive a series of [NeoPixels](http://www.adafruit.com/category/168
 
 # The process...
 
-Using Inkscape and some calipers, I wanted to design an avionics plate that would sit on top of the Iris shell.  At first I made the avionics plate huge (nearly covering the entire shell), then realized a lot of it was unnecessary.  After a series of prunes and dry runs/prints on my printer, I came to what I consider the bare minimum for the first revision.  It's really critical during this time that the design is printed on a printer, cut-out by hand, then checked against the craft and potential mounting locations.  I found several errors during this process. Also because once the mounting holes are set in the plate, I reused the holes to create a cutting guide.
+Using Inkscape and some callipers I wanted to design an avionics plate that would sit on top of the Iris shell.  At first I made the avionics plate huge (nearly covering the entire shell) then realized a lot of it was unnecessary.  After a series of prunes and dry runs/prints on my printer, I came to what I consider the bare minimum for the first revision.  It's really critical during this time that the design is printed on a printer, cut-out by hand, then checked against the craft and potential mounting locations.  I found several errors during this process. Also I used the hole spacing to create an acrylic cutting guide but later I plan to make a better cutting template.
 
 The laser cutter will raster anything that is not 0.001" so I did my little branding on the upper left, the rest of the lines have to be 0.001" otherwise the laser cutter will not do a cut.
 
