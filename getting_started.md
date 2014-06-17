@@ -30,26 +30,26 @@ few minutes in Linux, OS X, or Windows.
 
  2. [Install vagrant](http://docs.vagrantup.com/v2/installation/).
  
- 3. [Enable Virtualization in BIOS]  This vagrantfile will instruct Vbox provisioner
+ 3. <strong>Enable Virtualization in BIOS</strong>  This vagrantfile will instruct Vbox provisioner
  to enable multi-core of 4 with a CPU cap of 80%. If you do not, the SITL will be extremely slow.  If you don't
  enable Virtualization options, the box will fail to boot.
  
- 4. [Edit the vagrantfile] shared_folders to map to the three required projects: ardupilot, PX4Nuttx, PX4Firmware, and jsbsim.
+ 4. <strong>Edit the vagrantfile</strong> shared_folders to map to the three required projects: ardupilot, PX4Nuttx, PX4Firmware, and jsbsim.
 
- 5. [Start the vagrant] In the `ardupilot` directory, run `vagrant up` from the command
+ 5. <strong>Start the Vagrant</strong> In the `ardupilot` directory, run `vagrant up` from the command
  line.  This will create a new Ubuntu Linux VM.  This box is provisioned via puppet.
  any updates to the provisioning can be applied by running `vagrant provision`.
  The puppet files mimic the setup in "ardupilot/Tools/scripts/install-prereqs-ubuntu.sh -y"` as well
  as the requirements for SITL.  You do NOT need to run the script.  Puppet handles the provisioning.
  
- 6. [Wait for Puppet to complete provisioning] Once the provisioning is complete (it takes a while (30min or so) due to the large UI install packages)
+ 6. <strong>Wait for Puppet to complete provisioning</strong> Once the provisioning is complete (it takes a while (30min or so) due to the large UI install packages)
  
- 7. [Reboot to get a nice UI] run `vagrant reload` and upon reboot, the UI will appear. I recommend logging in using GNOME 2d (no effects) and installing the 
+ 7. <strong>Reboot</strong> to get a nice UI] run `vagrant reload` and upon reboot, the UI will appear. I recommend logging in using GNOME 2d (no effects) and installing the 
  GuestBoxAdditions from the Guest machine.
 
- 8. [Login] Login password is "vagrant" as well as sudo password.
+ 8. <strong>Login</strong> Login password is "vagrant" as well as sudo password.
  
- 9. [Fixing the guest additions defect in VBox 4.3.10] VirtualBox 4.3.10 has a a defect in the VBoxAdditions.  You will need to run the script "sudo vbox_patch.sh" located in
+ 9. <strong>Fixing the guest additions defect in VBox 4.3.10</strong> VirtualBox 4.3.10 has a a defect in the VBoxAdditions.  You will need to run the script "sudo vbox_patch.sh" located in
  home directory then reload the machine with `vagrant reload` otherwise vagrant will fail to mount the shared folders AFTER
  you've installed the VBoxAdditions.
 
