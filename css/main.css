@@ -1,5 +1,8 @@
 /*
  * Globals
+ #eee    Backgruond
+ #66CC33 Green
+ #3366CC Blue
  */
 
 /* Links 
@@ -20,19 +23,46 @@ a:hover {
   border: 1px solid #fff;
 }
 */
+.btn-default {
+    border: 1px solid #fff;
+    background-color: #66CC33;
+    color: white;
+}
 .btn-default:hover,
 .btn-default:focus {
-    color: white;
-    background-color: #66CC33;
+    color: #66CC33;
+    background-color: white;
+    border: 1px solid #66CC33;
 }
 
 .cover-heading {
+    color: white;
     font-size: 40px;
     font-weight: bold;
 }
 
 .small-lead {
     font-size: 16px;
+}
+
+.mastbanner {
+    color: white;
+    background-color: #66CC33;
+    width: 100%;
+}
+
+.mastbody {
+    height:  400px;
+}
+
+.section-bar {
+    background-color: #66CC33;
+    height: 200px;
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    padding-left: 50px;
+    padding-top: 50px;
 }
 
 /*
@@ -42,7 +72,7 @@ a:hover {
 html,
 body {
     height: 100%;
-    background-color: #eee;
+    background-color: white;
 }
 body {
     color: #000;
@@ -55,11 +85,13 @@ body {
 }
 
 
+
+
 /*
  * Header
  */
 .navbar-spacer {
-    height:  50px;
+    height:  15px;
 }
 .navbar-default {
     margin-bottom: 10px;
@@ -92,9 +124,10 @@ body {
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   font-size: 36px;
-  color: #3366CC;
+  color: black;
   background-color: transparent;
 }
+
 
 .navbar-default 
 .navbar-default{

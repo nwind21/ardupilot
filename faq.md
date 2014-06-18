@@ -1,10 +1,9 @@
 ---
+title: FAQ
 layout: default
 ---
 
-# FAQ
-
-Here's some questions and answers which may be of use.  The first section is a jump table to the actual questions.
+Here are some questions and answers which may be of use.  The first section is a jump table to the actual questions.
 
 This list should be fairly short.
 

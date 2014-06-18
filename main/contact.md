@@ -5,8 +5,6 @@ layout: default
 
 ---
 
-# Find me @ ...
-
 You can find me at a variety of places on DIYDrones, GitHub under:
 
 [GitHub](https://github.com/nwind21)
