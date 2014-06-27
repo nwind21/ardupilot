@@ -16,6 +16,7 @@ This list should be fairly short.
 <strong>Troubleshooting</strong>
 
 * [Vagrant failed to bring up](#q4)
+* [Vagrant cannot mount shared folders](#q5)
 
 <div class="hline"></div>
 
@@ -47,8 +48,17 @@ For documentation and this site, I use Jekyll.
 <div class="hline"></div>
 #Troubleshooting
 
+<a name="q4"></a>
 ###Vagrant failed to bring up.
 This can be a few things:
+
 * Did you enable VTX in your BIOS?
 * Do you have the right number of cores (edit the Vagrantfile)
 * Do you have a network connection?  Puppet needs to get from ubuntu mirrors
+
+<a name="q5"></a>
+###Vagrant cannot mount shared folders
+You probably have VirtualBox version 4.3.10 and installed the Guest Additions.
+
+A. You can either upgrade to 4.3.12 (confirmed to be fixed) [Remounting VBox Additions ISO on VBox Upgrade]({{site.url}}/2014/05/01/VirtualBox-Guest-Additions/) _or_
+B. Run the script `/home/vagrant/vbox_patch.sh` and restart your machine using `vagrant reload`
