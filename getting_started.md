@@ -77,18 +77,18 @@ If I did everything properly in the VM, you should be able to do:
 
 ```
 # cd ardupilot/Tools/autotest
-# autotest.py --mode quadcopter
+# autotest_n21.py --mode quadcopter
 ```
 
 And that should build the quadcopter SITL and run the simulation.  If you're making a code change and just wanna re-build incrementally:
 
 ```
-# autotest.py --mode build-quadcopter --incremental
+# autotest_n21.py --mode build-quadcopter --incremental
 ```
 
 or just re-fly
 
 ```
-# autotest.py --mode fly-quadcopter
+# autotest_n21.py --mode fly-quadcopter
 ```
 
