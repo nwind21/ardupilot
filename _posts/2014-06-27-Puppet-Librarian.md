@@ -1,6 +1,7 @@
 ---
 title: Puppet Librarian
 layout: posts
+categories: software
 ---
 
 # Using Puppet Librarian

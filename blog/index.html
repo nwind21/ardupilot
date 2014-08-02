@@ -1,0 +1,37 @@
+---
+
+title: Journal
+layout: flat
+
+---
+
+<div class="col-md-1">
+</div>
+<div class="col-md-6">
+    <ul class="pager">
+    {% if paginator.previous_page %}
+        {% if paginator.page == 2 %}
+        <a href="/blog" ><span class="glyphicon glyphicon-chevron-left"></span></a>
+        {% else %}
+        <a href="/blog/page{{ paginator.previous_page }}" ><span class="glyphicon glyphicon-chevron-left"></span></a>
+        {% endif %}
+    {% endif %}
+        <span class="page_number ">{{ paginator.page }} of {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}
+        <a href="/blog/page{{ paginator.next_page }}" ><span class="glyphicon glyphicon-chevron-right"></span></a>
+    {% endif %}
+    </ul>
+    {% for post in paginator.posts %}
+        <p class="blog-post-date blog-post-date-small">{{ post.date | date_to_long_string }}</p>
+        <h3>{{ post.title }}</h3>
+        {{ post.content | truncatewords:50 | strip_html  }}
+        <p>
+          <a href="{{site.url}}{{ post.url }}">Read Post</a>
+        </p>
+    {% endfor %}
+</div>
+<div class="col-md-1">
+</div>
+<div class="col-md-4">
+    {% include sidebar.html %}
+</div>

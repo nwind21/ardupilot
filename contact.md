@@ -2,7 +2,7 @@
 
 title: Contact
 layout: default
-
+icon: contact
 ---
 
 You can find me at a variety of places on DIYDrones, GitHub under:

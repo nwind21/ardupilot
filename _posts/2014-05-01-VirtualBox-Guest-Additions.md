@@ -1,6 +1,7 @@
 ---
 title: VirtualBox Won't Mount Guest Additions ISO
 layout: posts
+categories: software
 ---
 
 If you've already installed VirtualBox Guest Additions, VBox leaves the original ISO mounted and you probably will get an error trying to install the new additions from your upgrade.
@@ -17,6 +18,3 @@ To fix this:
 Credit goes to the information I found posted here:
 
 [Cannot mount vbox additions @ ubuntu forums](http://askubuntu.com/questions/321589/unable-to-mount-the-cd-dvd-image-on-the-machine-sandbox)
-
-
-

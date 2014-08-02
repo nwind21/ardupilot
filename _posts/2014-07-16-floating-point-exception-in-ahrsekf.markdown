@@ -2,6 +2,7 @@
 layout: posts
 title: "Floating Point Exception in AP_AHRS_NavEKF"
 date: "2014-07-16"
+categories: software
 ---
 
 # What is the AHRS

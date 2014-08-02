@@ -1,6 +1,7 @@
 ---
 title: Avionics Plate Part 1
 layout: posts
+categories: hardware
 ---
 
 # The idea...
@@ -35,4 +36,3 @@ There are four mounting holes that will need to be drilled through the top shell
 I went to [FabLab](fablabsd.org/) and cut the design on a 1/8" clear acrylic.  Here is the final cut!
 
 <img src="https://dl.dropboxusercontent.com/u/4242148/Blog/ClearPlate.jpg" class="img-thumbnail"/>
-

@@ -1,6 +1,7 @@
 ---
 title: Avionics Plate Part 2
 layout: posts
+categories: hardware
 ---
 
 # The Damage

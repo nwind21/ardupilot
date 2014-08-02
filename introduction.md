@@ -1,8 +1,8 @@
 ---
 
-title: Foyer
+title: Introduction
 layout: default
-
+icon: welcome
 ---
 
 # A Quick Introduction

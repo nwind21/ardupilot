@@ -1,6 +1,7 @@
 ---
 title: FAQ
 layout: default
+icon: reference
 ---
 
 Here are some questions and answers which may be of use.  The first section is a jump table to the actual questions.

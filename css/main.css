@@ -5,7 +5,7 @@
  #3366CC Blue
  */
 
-/* Links 
+/* Links
 a,
 a:focus,
 a:hover {
@@ -13,7 +13,7 @@ a:hover {
 }
 */
 
-/* Custom default button 
+/* Custom default button
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
@@ -23,6 +23,21 @@ a:hover {
   border: 1px solid #fff;
 }
 */
+a.list-group-item.active,
+a.list-group-item.active:hover,
+a.list-group-item.active:focus {
+    background-color: #66CC33;
+    border-color: #66CC33;
+}
+
+a.list-group-item.active > h3 {
+    color: white;
+}
+
+glyphicon > a {
+    color: #66CC33;
+}
+
 .btn-default {
     border: 1px solid #fff;
     background-color: #66CC33;
@@ -57,12 +72,12 @@ a:hover {
 
 .section-bar {
     background-color: #66CC33;
-    height: 200px;
+    height: 150px;
     font-size: 36px;
     font-weight: bold;
     color: white;
     padding-left: 50px;
-    padding-top: 50px;
+    padding-top: 30px;
 }
 
 /*
@@ -96,7 +111,7 @@ body {
 .navbar-default {
     margin-bottom: 10px;
     color: #000;
-    background-color: transparent;  
+    background-color: transparent;
 }
 .navbar-default .navbar-brand > li {
   display: inline-block;
@@ -129,7 +144,7 @@ body {
 }
 
 
-.navbar-default 
+.navbar-default
 .navbar-default{
   color: #000;
   background-color: transparent;
@@ -140,15 +155,15 @@ body {
 .navbar-default .navbar-nav > li > a:focus {
   color: #000;
   background-color: transparent;
-  border-bottom-color: rgba(51,102,204,.25);
+  border-bottom-color: #66CC33;
 }
 
-.navbar-default .navbar-nav > .active > a, 
-.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #000;
   background-color: transparent;
-  border-bottom-color: #3366CC;
+  border-bottom-color: #66CC33;
 }
 
 .nav > li {
@@ -162,19 +177,19 @@ body {
 }
 
 .dropdown-menu   {
-   background-color: #333;
-   background-color: transparent;
+   background-color: white;
+/*   background-color: transparent;*/
 }
 .dropdown-menu > li > a {
-   color: #ccc;
+   color: #000;
    border-bottom: 2px solid transparent;
 }
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-   color: #000;
+   color: #66CC33;
    background-color: transparent;
-   border-bottom-color: rgba(255,255,255,.25);
+/*   border-bottom-color: rgba(255,255,255,.25); */
 }
 
 @media (min-width: 768px) {

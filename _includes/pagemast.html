@@ -4,7 +4,18 @@
 </div>
 <div class="row ">
     <div class="col-md-12 section-bar">
-        {{ page.title }}
+        <!--
+    {% case page.icon  %}
+      {% when 'contact' %}
+         <span class="glyphicon glyphicon-user"></span><{{ page.title }}
+      {% when 'welcome' %}
+         <span class="glyphicon glyphicon-star"></span><br/>{{ page.title }}
+      {% when 'reference' %}
+         <span class="glyphicon glyphicon-wrench"></span><br/>{{ page.title }}
+      {% else %}
+         <span class="glyphicon glyphicon-book"></span>
+    {% endcase %}-->
+    {{ page.title }}
     </div>
 </div>
 <div class="row navbar-spacer">

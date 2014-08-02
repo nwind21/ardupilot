@@ -1,6 +1,7 @@
 ---
 title: Work In Progress
 layout: default
+icon: reference
 ---
 
 My laundry list, in priority rank order.

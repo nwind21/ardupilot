@@ -1,6 +1,7 @@
 ---
 title: SITL Refactor to use ZMQ
 layout: posts
+categories: software
 ---
 
 # Mr. Autotest
