@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: posts
 title: "GTest + GMock for Library Tests"
 date: "2014-08-02"
 categories: software
@@ -65,6 +65,7 @@ make
 ```
 
 To run:
+
 ```
 make run
 ```
