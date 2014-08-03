@@ -8,10 +8,9 @@
 <ul>
     <li><a href="{{site.url}}/led">Lights Lights Lights!</a></li>
 </ul>
-<h2>Recent Entries</h2>
+<h2>Recent 10 Entries</h2>
 <ul>
   {% for post in site.posts limit: 10 %}
     <li><a href="{{site.url}}{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
-  <li>...</li>
 </ul>
