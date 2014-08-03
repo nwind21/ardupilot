@@ -16,7 +16,7 @@ layout: flat
             {% for post in posts %}
 	            {% if post.url %}
 					{% assign year = post.date | date: "%Y" %}
-	                <a href="{{ post.url }}" class="list-group-item">{{ post.date | date: "%Y.%m.%d"}}  {{ post.title }}</a>
+	                <a href="{{site.url}}{{ post.url }}" class="list-group-item">{{ post.date | date: "%Y.%m.%d"}}  {{ post.title }}</a>
 					{% assign lastYear = year %}
 				{% endif %}
             {% endfor %}
