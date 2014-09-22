@@ -5,28 +5,57 @@ date: "2014-09-13"
 categories: software
 ---
 
-# Goals
-
-The goal is to wire feedback from the I2C bus from the Pixhawk to the Uno to control the lighting strip on the quad.
+# Project Location
 
 Project is located here: [NeoPixels](https://github.com/nwind21/apm_neopixels)
 
-# First Step
+# Class Diagram and Test
 
 All test code will be use Google Mock and Google Test. All testing will be done on the host.
 
-* VisualStudio 2013 used for the unit test harness
-* AtmelStudio 6.2 used to xcompile for the Arduino Board
+* VisualStudio 2013 used for the unit test harness and xcompile using [Visual Micro](http://www.visualmicro.com).
+* Arduino uLibC++ port found [here](https://github.com/maniacbug/StandardCplusplus)
 
-Pure interfaces classes will be written to abstract the Arduino code from the lighting control algorithm. Two classes have been created:
+Pure interfaces classes will be written to abstract the Arduino code from the lighting control algorithm. Four interfaces and implementation have been created:
 
 * II2C
 * ILighting
+* ISystem
+* ITimer
 
-Tests will focus enforcing the calling of the I2C and ILighting objects interfaces. Actual implementation of the I2C and ILighting layer will be tested on the hardware. The interfaces will stay as close to the hardware as possible to minimize the amount of physical hardware testing required and therefore permitting as much of the decision logic to be tested in the host framework. The interfaces will also not expose implementation details, e.g. the interfaces should not make assumptions of the underlying hardware (in the event, it changes).
+The tests will focus enforcing the calling of the I2C and ILighting objects interfaces using mocked classes.  The actual implementation of the I2C and ILighting layer will be tested on the hardware with the goal of the interfaces  staying as close to the hardware as possible to minimize the amount of physical hardware testing required. The interfaces will also not expose implementation details, e.g. the interfaces should not make assumptions of the underlying hardware (in the event, it changes).
 
-# Next Step
+<img src="https://dl.dropboxusercontent.com/u/4242148/Blog/ArduinoClassDiagram.png" class="img-thumbnail"/>
 
-After the interfaces and testing stubs are created I'll write up a basic lighting control object that runs through the interfaces to make sure the mocks are invoked on a generic lighting control before implementing the real logic.
+# Lighting Control Object
 
-I'm also considering a simple lightweight messaging bus that will allow me to connect arbitrary events for additional flexibility on what is triggered, versus hardcoding the handling of a trigger. I'm not quite 100% convinced the added complexity is worth it, but it'll be on the table.
+The Lighting control object will accept both <strong>ITimer</strong> and <strong>ILighting</strong> object which will allow mock objects to be inserted during test.
+
+```
+LightingIrisImpl lights;
+LightingControl::initialize( &lights,
+                             &GLOBAL_TIMER );
+```
+
+The Lighting Control Object (LCO) was designed with the following requirements:
+
+* <strong>Non-blocking</strong>. Because lights usually need delays to control the visibliity, the most commong implementation would use delays. This would cause the board to block and prevent other events from happening.
+* <strong>Queueable</strong>. Because of the non-blocking nature, I need a queue so that when an event arrives to display a lighting pattern, they can be queued.  This way commands and lighting patterns are never lost.
+* <strong>10ms resolution</strong>. The LCO will attach to the system timer event at 10ms interval that should be sufficient for lighting applications.
+
+Events can be queued:
+
+```
+LightingControl::queueLightSequence( LightingControl::LightSequence_SystemCheck );
+```
+
+# Arduino Main Control Loop
+
+The main loop in the Arduino will drive the system using a global event timer <strong>ITimer</strong>.
+
+```
+void loop()
+{
+    GLOBAL_TIMER.update();
+}
+```
