@@ -13,12 +13,12 @@ layout: flat
         {% if paginator.page == 2 %}
         <a href="/blog" ><span class="glyphicon glyphicon-chevron-left"></span></a>
         {% else %}
-        <a href="/blog/page{{ paginator.previous_page }}" ><span class="glyphicon glyphicon-chevron-left"></span></a>
+        <a href="{{site.url}}/blog/page{{ paginator.previous_page }}" ><span class="glyphicon glyphicon-chevron-left"></span></a>
         {% endif %}
     {% endif %}
         <span class="page_number ">{{ paginator.page }} of {{ paginator.total_pages }}</span>
     {% if paginator.next_page %}
-        <a href="/blog/page{{ paginator.next_page }}" ><span class="glyphicon glyphicon-chevron-right"></span></a>
+        <a href="{{site.url}}/blog/page{{ paginator.next_page }}" ><span class="glyphicon glyphicon-chevron-right"></span></a>
     {% endif %}
     </ul>
     {% for post in paginator.posts %}
