@@ -10,11 +10,11 @@ layout: flat
 <div class="col-md-6">
     <ul class="pager">
     {% if paginator.previous_page %}
-        {% if paginator.page == 2 %}
-        <a href="/blog" ><span class="glyphicon glyphicon-chevron-left"></span></a>
-        {% else %}
+    {% if paginator.page == 2 %}
+        <a href="{{site.url}}/blog" ><span class="glyphicon glyphicon-chevron-left"></span></a>
+    {% else %}
         <a href="{{site.url}}/blog/page{{ paginator.previous_page }}" ><span class="glyphicon glyphicon-chevron-left"></span></a>
-        {% endif %}
+    {% endif %}
     {% endif %}
         <span class="page_number ">{{ paginator.page }} of {{ paginator.total_pages }}</span>
     {% if paginator.next_page %}
