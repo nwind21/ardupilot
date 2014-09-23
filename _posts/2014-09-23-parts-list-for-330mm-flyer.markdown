@@ -2,6 +2,7 @@
 layout: posts
 title: "Parts List for 330mm Flyer"
 date: "2014-09-23"
+categories: hardware
 ---
 
 ## Part Choices
