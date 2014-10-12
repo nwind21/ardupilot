@@ -20,15 +20,16 @@
 
 #include <AP_HAL_Empty.h>
 #include <AP_HAL_Empty_Private.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace AVR_SITL;
 
 static SITLScheduler sitlScheduler;
 static SITLEEPROMStorage sitlEEPROMStorage;
-static SITL_State sitlState;
-static SITLRCInput  sitlRCInput(&sitlState);
-static SITLRCOutput sitlRCOutput(&sitlState);
-static SITLAnalogIn sitlAnalogIn(&sitlState);
+static SITLRCInput  sitlRCInput;
+static SITLRCOutput sitlRCOutput;
+static SITLAnalogIn sitlAnalogIn;
 
 // use the Empty HAL for hardware we don't emulate
 static Empty::EmptyGPIO emptyGPIO;
@@ -36,11 +37,11 @@ static Empty::EmptySemaphore emptyI2Csemaphore;
 static Empty::EmptyI2CDriver emptyI2C(&emptyI2Csemaphore);
 static Empty::EmptySPIDeviceManager emptySPI;
 
-static SITLUARTDriver sitlUart0Driver(0, &sitlState);
-static SITLUARTDriver sitlUart1Driver(1, &sitlState);
-static SITLUARTDriver sitlUart2Driver(2, &sitlState);
-static SITLUARTDriver sitlUart3Driver(3, &sitlState);
-static SITLUARTDriver sitlUart4Driver(4, &sitlState);
+SITLUARTDriver sitlUart0Driver(0);
+static SITLUARTDriver sitlUart1Driver(1);
+static SITLUARTDriver sitlUart2Driver(2);
+static SITLUARTDriver sitlUart3Driver(3);
+static SITLUARTDriver sitlUart4Driver(4);
 
 static SITLUtil utilInstance;
 
@@ -60,13 +61,13 @@ HAL_AVR_SITL::HAL_AVR_SITL() :
         &sitlRCInput,  /* rcinput */
         &sitlRCOutput, /* rcoutput */
         &sitlScheduler, /* scheduler */
-        &utilInstance), /* util */
-    _sitl_state(&sitlState)
+        &utilInstance) /* util */
 {}
 
 void HAL_AVR_SITL::init(int argc, char * const argv[]) const 
 {
-    _sitl_state->init(argc, argv);
+	fprintf(stdout, "HAL_AVR_SITL::init\n" );
+    AVR_SITL::SITL_State::init(argc, argv);
     scheduler->init(NULL);
     uartA->begin(115200);
 

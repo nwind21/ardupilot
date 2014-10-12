@@ -12,7 +12,7 @@ public:
     friend class AVR_SITL::SITLAnalogIn;
     /* pin designates the ADC input number, or when == AVR_ANALOG_PIN_VCC,
      * board vcc */
-    ADCSource(SITL_State *sitlState, uint8_t pin);
+    ADCSource(uint8_t pin);
 
     /* implement AnalogSource virtual api: */
     float read_average();
@@ -25,7 +25,6 @@ public:
     void set_settle_time(uint16_t settle_time_ms) {}
 
 private:
-    SITL_State *_sitlState;
     uint8_t _pin;
 };
 
@@ -33,15 +32,13 @@ private:
  * timer event and the AP_HAL::AnalogIn interface */
 class AVR_SITL::SITLAnalogIn : public AP_HAL::AnalogIn {
 public:
-    SITLAnalogIn(SITL_State *sitlState) {
-	_sitlState = sitlState;
+    SITLAnalogIn() {
     }
     void init(void* ap_hal_scheduler);
     AP_HAL::AnalogSource* channel(int16_t n);
     float board_voltage(void) { return 5.0f; }
 private:
     static ADCSource* _channels[SITL_INPUT_MAX_CHANNELS];
-    SITL_State *_sitlState;
 };
 
 #endif // __AP_HAL_AVR_SITL_ANALOG_IN_H__

@@ -11,31 +11,32 @@
 
 class AVR_SITL::SITLUARTDriver : public AP_HAL::UARTDriver {
 public:
-    friend class AVR_SITL::SITL_State;
-
-	SITLUARTDriver(const uint8_t portNumber, SITL_State *sitlState) {
+	SITLUARTDriver(const uint8_t portNumber) {
 		_portNumber = portNumber;
         _rxSpace = _default_rx_buffer_size;
         _txSpace = _default_tx_buffer_size;
-        _sitlState = sitlState;
         
         _fd = -1;
         _listen_fd = -1;
 	}
+    virtual ~SITLUARTDriver( )
+    {
+        end();
+    }
 
     /* Implementations of UARTDriver virtual methods */
     void begin(uint32_t b) { begin(b, 0, 0); }
-    void begin(uint32_t b, uint16_t rxS, uint16_t txS);
-    void end();
-    void flush();
-    bool is_initialized() { return true; }
+    virtual void begin(uint32_t b, uint16_t rxS, uint16_t txS);
+    virtual void end();
+    virtual void flush();
+    virtual bool is_initialized() { return true; }
 
-    void set_blocking_writes(bool blocking) 
+    virtual void set_blocking_writes(bool blocking) 
     {
 		_nonblocking_writes = !blocking;
     }
 
-    bool tx_pending() {
+    virtual bool tx_pending() {
 	    return false;
     }
 
@@ -50,13 +51,14 @@ public:
 
     // file descriptor, exposed so SITL_State::loop_hook() can use it
 	int _fd;
-
+    static void _set_nonblocking(int );
+	static bool _console;
 private:
     uint8_t _portNumber;
 	bool _connected; // true if a client has connected
 	int _listen_fd;  // socket we are listening on
 	int _serial_port;
-	static bool _console;
+
 	bool _nonblocking_writes;
     uint16_t _rxSpace;
     uint16_t _txSpace;
@@ -64,7 +66,6 @@ private:
     void _tcp_start_connection(bool wait_for_connection);
     void _check_connection(void);
     static bool _select_check(int );
-    static void _set_nonblocking(int );
 
 	/// default receive buffer size
 	static const uint16_t _default_rx_buffer_size = 128;
@@ -78,7 +79,6 @@ private:
 	///
 	static const uint16_t _max_buffer_size = 512;
 
-    SITL_State *_sitlState;
 
 };
 

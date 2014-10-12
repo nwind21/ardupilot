@@ -13,19 +13,19 @@ void SITLRCInput::init(void* machtnichts)
 }
 
 bool SITLRCInput::new_input() {
-    return _sitlState->new_rc_input;
+    return AVR_SITL::SITL_State::new_rc_input;
 }
 
 uint16_t SITLRCInput::read(uint8_t ch) {
-    _sitlState->new_rc_input = false;
-    return _override[ch]? _override[ch] : _sitlState->pwm_input[ch];
+    AVR_SITL::SITL_State::new_rc_input = false;
+    return _override[ch]? _override[ch] : AVR_SITL::SITL_State::pwm_input[ch];
 }
 
 uint8_t SITLRCInput::read(uint16_t* periods, uint8_t len) {
     for (uint8_t i=0; i<len; i++) {
-	periods[i] = _override[i]? _override[i] : _sitlState->pwm_input[i];
+	periods[i] = _override[i]? _override[i] : AVR_SITL::SITL_State::pwm_input[i];
     }
-    _sitlState->new_rc_input = false;
+    AVR_SITL::SITL_State::new_rc_input = false;
     return 8;
 }
 

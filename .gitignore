@@ -17,7 +17,8 @@
 *.vbrain
 *.zip
 .*.swo
-.*.swp
+*.log
+*.tgz
 .built
 .context
 .cproject
@@ -28,6 +29,9 @@
 .project
 .settings/
 .vagrant
+Parameters.html
+Parameters.wiki
+apm.pdef.xml
 /tmp/*
 /Tools/ArdupilotMegaPlanner/3DRRadio/bin
 /Tools/ArdupilotMegaPlanner/3DRRadio/obj
@@ -50,6 +54,8 @@
 /Tools/autotest/aircraft/Rascal/reset.xml
 /Tools/autotest/jsbsim/fgout.xml
 /Tools/autotest/jsbsim/rascal_test.xml
+/Tools/autotest/test/logs/*
+/Tools/autotest/test.ArduCopter/logs/*
 ArduCopter/Debug/
 ArduCopter/terrain/*.DAT
 ArduCopter/test.ArduCopter/

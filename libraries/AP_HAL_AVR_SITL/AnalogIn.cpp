@@ -4,15 +4,17 @@
 #if CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
 
 #include "AP_HAL_AVR_SITL.h"
+#include "SITL_State.h"
 #include "AnalogIn.h"
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace AVR_SITL;
 
 extern const AP_HAL::HAL& hal;
 
-ADCSource::ADCSource(SITL_State *sitlState, uint8_t pin) :
-    _sitlState(sitlState),
+ADCSource::ADCSource(uint8_t pin) :
     _pin(pin)
 {}
 
@@ -34,16 +36,16 @@ float ADCSource::read_latest() {
         return 1023;
         
     case 0:
-        return _sitlState->sonar_pin_value;
+        return AVR_SITL::SITL_State::sonar_pin_value;
 
     case 1:
-        return _sitlState->airspeed_pin_value;
+        return AVR_SITL::SITL_State::airspeed_pin_value;
 
     case 12:
-        return _sitlState->current_pin_value;
+        return AVR_SITL::SITL_State::current_pin_value;
 
     case 13:
-        return _sitlState->voltage_pin_value;
+        return AVR_SITL::SITL_State::voltage_pin_value;
 
     case ANALOG_INPUT_NONE:
     default:
@@ -59,7 +61,7 @@ void SITLAnalogIn::init(void *ap_hal_scheduler) {
 }
 
 AP_HAL::AnalogSource* SITLAnalogIn::channel(int16_t pin) {
-    return new ADCSource(_sitlState, pin);	
+    return new ADCSource(pin);	
 }
 
 #endif

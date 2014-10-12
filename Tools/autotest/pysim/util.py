@@ -58,11 +58,14 @@ def deltree(path):
 
 
 
-def build_SIL(atype, target='sitl'):
+def build_SIL(atype, target='sitl', flags=None):
     '''build desktop SIL'''
-    run_cmd("make clean",
-            dir=reltopdir(atype),
-            checkfail=True)
+    print("====  build_SIL ==== " )
+    if ( flags != None and flags['incremental'] == False ) or flags == None:
+        print("====  build_SIL clean ==== " )
+        run_cmd( "make clean",
+                 dir=reltopdir(atype),
+                 checkfail=True)
     run_cmd("make %s" % target,
             dir=reltopdir(atype),
             checkfail=True)
@@ -95,13 +98,23 @@ def pexpect_close(p):
     global close_list
 
     try:
-        p.close()
+        print( "Sending a termination." );
+        p.terminate()
+        try:
+            p.read(1000)
+        except pexpect.TIMEOUT:
+            pass
     except Exception:
         pass
+
+    '''
     try:
+        print( "Sending a close." );
         p.close(force=True)
     except Exception:
         pass
+    '''
+
     if p in close_list:
         close_list.remove(p)
 
@@ -121,6 +134,7 @@ def pexpect_drain(p):
 
 def start_SIL(atype, valgrind=False, wipe=False, height=None):
     '''launch a SIL instance'''
+    print("====  start_SIL ==== " )
     import pexpect
     cmd=""
     if valgrind and os.path.exists('/usr/bin/valgrind'):
@@ -128,6 +142,7 @@ def start_SIL(atype, valgrind=False, wipe=False, height=None):
     executable = reltopdir('tmp/%s.build/%s.elf' % (atype, atype))
     if not os.path.exists(executable):
         executable = '/tmp/%s.build/%s.elf' % (atype, atype)
+    print ( "Loading arducopter.elf from " + executable )
     cmd += executable
     if wipe:
         cmd += ' -w'
@@ -136,11 +151,14 @@ def start_SIL(atype, valgrind=False, wipe=False, height=None):
     ret = pexpect.spawn(cmd, logfile=sys.stdout, timeout=5)
     ret.delaybeforesend = 0
     pexpect_autoclose(ret)
+    print ( "Arducopter.elf cmd: " + cmd )
     ret.expect('Waiting for connection')
     return ret
 
 def start_MAVProxy_SIL(atype, aircraft=None, setup=False, master='tcp:127.0.0.1:5760',
                        options=None, logfile=sys.stdout):
+
+    print("====  start_MAVProxy_SIL ==== " )
     '''launch mavproxy connected to a SIL instance'''
     import pexpect
     global close_list
@@ -268,20 +286,20 @@ def BodyRatesToEarthRates(dcm, gyro):
     return Vector3(phiDot, thetaDot, psiDot)
 
 def gps_newpos(lat, lon, bearing, distance):
-    '''extrapolate latitude/longitude given a heading and distance 
+    '''extrapolate latitude/longitude given a heading and distance
     thanks to http://www.movable-type.co.uk/scripts/latlong.html
     '''
     from math import sin, asin, cos, atan2, radians, degrees
     radius_of_earth = 6378100.0 # in meters
-    
+
     lat1 = radians(lat)
     lon1 = radians(lon)
     brng = radians(bearing)
     dr = distance/radius_of_earth
-    
+
     lat2 = asin(sin(lat1)*cos(dr) +
                 cos(lat1)*sin(dr)*cos(brng))
-    lon2 = lon1 + atan2(sin(brng)*sin(dr)*cos(lat1), 
+    lon2 = lon1 + atan2(sin(brng)*sin(dr)*cos(lat1),
                         cos(dr)-sin(lat1)*sin(lat2))
     return (degrees(lat2), degrees(lon2))
 
@@ -346,9 +364,9 @@ class Wind(object):
         # Compute the angle between the object vector and wind vector by taking
         # the dot product and dividing by the magnitudes.
         d = w.length() * obj_speed
-        if d == 0: 
+        if d == 0:
             alpha = 0
-        else: 
+        else:
             alpha = acos((w * velocity) / d)
 
         # Get the relative wind speed and angle from the object.  Note that the
@@ -389,10 +407,10 @@ def apparent_wind(wind_sp, obj_speed, alpha):
 # kg/m^3, the density just over 1500m elevation), v : relative speed of wind
 # (to the body), a : area acted on (this is captured by the cross_section
 # paramter).
-# 
-# So then we have 
+#
+# So then we have
 # F(a) = 0.2 * 1/2 * v^2 * cross_section = 0.1 * v^2 * cross_section
-def drag_force(wind, sp): 
+def drag_force(wind, sp):
     return (sp**2.0) * 0.1 * wind.cross_section
 
 # Function to make the force vector.  relWindVec is the direction the apparent

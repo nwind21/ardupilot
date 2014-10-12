@@ -54,22 +54,26 @@ void SITLUARTDriver::begin(uint32_t baud, uint16_t rxSpace, uint16_t txSpace)
     }
     switch (_portNumber) {
     case 0:
+        fprintf( stderr, "SITLUARTDriver::begin,  tcp_start_connection(true) + 0\n" );
         _tcp_start_connection(true);
         break;
 
     case 1:
+        fprintf( stderr, "SITLUARTDriver::begin,  GPS pipe + 1\n" );
         /* gps */
         _connected = true;
-        _fd = _sitlState->gps_pipe();
+        _fd = AVR_SITL::SITL_State::gps_pipe();
         break;
 
     case 4:
         /* gps2 */
+        fprintf( stderr, "SITLUARTDriver::begin,  GPS pipe + 4\n" );
         _connected = true;
-        _fd = _sitlState->gps2_pipe();
+        _fd = AVR_SITL::SITL_State::gps2_pipe();
         break;
         
     default:
+        fprintf( stderr, "SITLUARTDriver::begin,  portNumber + %d\n", _portNumber );
         _tcp_start_connection(false);
         break;
     }
@@ -77,6 +81,20 @@ void SITLUARTDriver::begin(uint32_t baud, uint16_t rxSpace, uint16_t txSpace)
 
 void SITLUARTDriver::end() 
 {
+    fprintf(stderr, "SITLUARTDriver::end %u\n", _portNumber);
+    if ( _listen_fd != -1 )
+    {
+        fprintf(stderr, "SITLUARTDriver::end: closing _listen_fd socket\n" );
+        close( _listen_fd );
+        _listen_fd = -1;
+    }
+    
+    if ( _fd != -1 )
+    {
+        fprintf(stderr, "SITLUARTDriver::end: closing  _fd socket\n" );
+        close( _fd );
+        _fd = -1;
+    }    
 }
 
 int16_t SITLUARTDriver::available(void) 
@@ -97,7 +115,7 @@ int16_t SITLUARTDriver::available(void)
             }
             if (num_ready == 0) {
                 // EOF is reached
-                fprintf(stdout, "Closed connection on serial port %u\n", _portNumber);
+                fprintf(stderr, "Closed connection on serial port %u\n", _portNumber);
                 close(_fd);
                 _connected = false;
                 return 0;
@@ -127,7 +145,7 @@ int16_t SITLUARTDriver::read(void)
     }
 
     if (_portNumber == 1 || _portNumber == 4) {
-        if (_sitlState->gps_read(_fd, &c, 1) == 1) {
+        if (AVR_SITL::SITL_State::gps_read(_fd, &c, 1) == 1) {
             return (uint8_t)c;
         }
         return -1;
@@ -142,8 +160,9 @@ int16_t SITLUARTDriver::read(void)
         // the socket has reached EOF
         close(_fd);
         _connected = false;
-        fprintf(stdout, "Closed connection on serial port %u\n", _portNumber);
-        fflush(stdout);
+        _fd = -1;
+        fprintf(stderr, "Closed connection on serial port %u\n", _portNumber);
+        fflush(stderr);
         return -1;
     }
     if (n == 1) {
@@ -187,21 +206,21 @@ size_t SITLUARTDriver::write(const uint8_t *buffer, size_t size)
  */
 void SITLUARTDriver::_tcp_start_connection(bool wait_for_connection)
 {
-	int one=1;
-	struct sockaddr_in sockaddr;
-	int ret;
+    int one=1;
+    struct sockaddr_in sockaddr;
+    int ret;
 
-        if (_connected) {
-            return;
-        }
+    if (_connected) {
+        return;
+    }
 
-	if (_console) {
+    if (_console) {
             // hack for console access
             _connected = true;
             _listen_fd = -1;
             _fd = 1;
             return;
-	}
+    }
 
         if (_fd != -1) {
             close(_fd);
@@ -213,28 +232,33 @@ void SITLUARTDriver::_tcp_start_connection(bool wait_for_connection)
 #ifdef HAVE_SOCK_SIN_LEN
             sockaddr.sin_len = sizeof(sockaddr);
 #endif
-            sockaddr.sin_port = htons(_sitlState->base_port() + _portNumber);
+            sockaddr.sin_port = htons(AVR_SITL::SITL_State::base_port() + _portNumber);
             sockaddr.sin_family = AF_INET;
 
             _listen_fd = socket(AF_INET, SOCK_STREAM, 0);
             if (_listen_fd == -1) {
-		fprintf(stderr, "socket failed - %s\n", strerror(errno));
-		exit(1);
+                fprintf(stderr, "socket failed - %s\n", strerror(errno));
+                exit(1);
             }
 
             /* we want to be able to re-use ports quickly */
-            setsockopt(_listen_fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+            if ( setsockopt(_listen_fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one)) != 0 )
+            {
+                    fprintf(stderr,"setsockopt SO_REUSEADDR failed on port %u - %s\n",
+                                (unsigned)ntohs(sockaddr.sin_port),
+                                strerror(errno));
+            }
 
             fprintf(stderr, "bind port %u for %u\n", 
                     (unsigned)ntohs(sockaddr.sin_port),
-                    (unsigned)_portNumber),
-
+                    (unsigned)_portNumber);
+        
             ret = bind(_listen_fd, (struct sockaddr *)&sockaddr, sizeof(sockaddr));
             if (ret == -1) {
-		fprintf(stderr, "bind failed on port %u - %s\n",
-                        (unsigned)ntohs(sockaddr.sin_port),
-                        strerror(errno));
-		exit(1);
+                fprintf(stderr,"bind failed on port %u - %s.\n",
+                            (unsigned)ntohs(sockaddr.sin_port),
+                            strerror(errno));
+                exit(1);
             }
 
             ret = listen(_listen_fd, 5);
@@ -244,11 +268,11 @@ void SITLUARTDriver::_tcp_start_connection(bool wait_for_connection)
             }
 
             fprintf(stderr, "Serial port %u on TCP port %u\n", _portNumber, 
-                    _sitlState->base_port() + _portNumber);
-            fflush(stdout);
+                    AVR_SITL::SITL_State::base_port() + _portNumber);
+            fflush(stderr);
         }
 
-	if (wait_for_connection) {
+    if (wait_for_connection) {
             fprintf(stdout, "Waiting for connection ....\n");
             fflush(stdout);
             _fd = accept(_listen_fd, NULL, NULL);
@@ -267,11 +291,11 @@ void SITLUARTDriver::_tcp_start_connection(bool wait_for_connection)
  */
 void SITLUARTDriver::_check_connection(void)
 {
-	if (_connected) {
+    if (_connected) {
             // we only want 1 connection at a time
             return;
-	}
-	if (_select_check(_listen_fd)) {
+    }
+    if (_select_check(_listen_fd)) {
             _fd = accept(_listen_fd, NULL, NULL);
             if (_fd != -1) {
                 int one = 1;
@@ -280,7 +304,7 @@ void SITLUARTDriver::_check_connection(void)
                 setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
                 fprintf(stdout, "New connection on serial port %u\n", _portNumber);
             }
-	}
+    }
 }
 
 /*
@@ -288,26 +312,26 @@ void SITLUARTDriver::_check_connection(void)
  */
 bool SITLUARTDriver::_select_check(int fd)
 {
-	fd_set fds;
-	struct timeval tv;
+    fd_set fds;
+    struct timeval tv;
 
-	FD_ZERO(&fds);
-	FD_SET(fd, &fds);
+    FD_ZERO(&fds);
+    FD_SET(fd, &fds);
 
-	// zero time means immediate return from select()
-	tv.tv_sec = 0;
-	tv.tv_usec = 0;
+    // zero time means immediate return from select()
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
 
-	if (select(fd+1, &fds, NULL, NULL, &tv) == 1) {
-		return true;
-	}
-	return false;
+    if (select(fd+1, &fds, NULL, NULL, &tv) == 1) {
+        return true;
+    }
+    return false;
 }
 
 void SITLUARTDriver::_set_nonblocking(int fd)
 {
-	unsigned v = fcntl(fd, F_GETFL, 0);
-	fcntl(fd, F_SETFL, v | O_NONBLOCK);
+    unsigned v = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, v | O_NONBLOCK);
 }
 
 #endif

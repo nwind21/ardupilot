@@ -8,8 +8,7 @@
 
 class AVR_SITL::SITLRCInput : public AP_HAL::RCInput {
 public:
-    SITLRCInput(SITL_State *sitlState) {
-	    _sitlState = sitlState;
+    SITLRCInput() {
     }
     void init(void* machtnichts);
     bool  new_input();
@@ -22,7 +21,6 @@ public:
     void clear_overrides();
 
 private:
-    SITL_State *_sitlState;
     bool _valid;
 
     /* override state */

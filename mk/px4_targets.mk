@@ -48,6 +48,7 @@ PX4_MAKE_ARCHIVES = make -C $(PX4_ROOT) NUTTX_SRC=$(NUTTX_SRC) archives MAXOPTIM
 
 .PHONY: module_mk
 module_mk:
+	@$(ECHO) "====== Invoking PX4_MODULE_MK"
 	$(RULEHDR)
 	$(v) echo "# Auto-generated file - do not edit" > $(SKETCHBOOK)/module.mk.new
 	$(v) echo "MODULE_COMMAND = ArduPilot" >> $(SKETCHBOOK)/module.mk.new
@@ -66,9 +67,13 @@ px4-v1: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v1.export $(SKETCHCP
 	$(v) echo "PX4 $(SKETCH) Firmware is in $(SKETCH)-v1.px4"
 
 px4-v2: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v2.export $(SKETCHCPP) module_mk px4-io-v2
+	@$(ECHO) "====== Executing px4-v2"
 	$(RULEHDR)
+	@$(ECHO) "====== Removing PX4_ROOT config files"
 	$(v) rm -f $(PX4_ROOT)/makefiles/$(PX4_V2_CONFIG_FILE)
+	@$(ECHO) "====== Copying PX4_v2 config file to PX4_ROOT/makefiles"
 	$(v) cp $(PWD)/$(PX4_V2_CONFIG_FILE) $(PX4_ROOT)/makefiles/
+	@$(ECHO) "====== Invoking PX4_MAKE"
 	$(PX4_MAKE) px4fmu-v2_APM
 	$(v) /bin/rm -f $(SKETCH)-v2.px4
 	$(v) cp $(PX4_ROOT)/Images/px4fmu-v2_APM.px4 $(SKETCH)-v2.px4
@@ -110,11 +115,14 @@ px4-io-v1: $(PX4_ROOT)/Archives/px4io-v1.export
 
 
 px4-io-v2: $(PX4_ROOT)/Archives/px4io-v2.export
+	@$(ECHO) "====== Invoking PX4_IO_V2"
 	$(v) make -C $(PX4_ROOT) px4io-v2_default
+	@$(ECHO) "====== Removing px4io-v2.bin"
 	$(v) /bin/rm -f px4io-v2.bin
 	$(v) cp $(PX4_ROOT)/Build/px4io-v2_default.build/firmware.bin px4io-v2.bin
 	$(v) cp $(PX4_ROOT)/Images/px4io-v2_default.bin px4io-v2.bin
 	$(v) cp $(PX4_ROOT)/Build/px4io-v2_default.build/firmware.elf px4io-v2.elf
+	@$(ECHO) "====== Setting up romFS build"
 	$(v) mkdir -p $(MK_DIR)/PX4/ROMFS/px4io/
 	$(v) rm -f $(MK_DIR)/PX4/ROMFS/px4io/px4io.bin
 	$(v) cp px4io-v2.bin $(MK_DIR)/PX4/ROMFS/px4io/px4io.bin
@@ -130,7 +138,10 @@ $(PX4_ROOT)/Archives/px4fmu-v1.export:
 	$(v) $(PX4_MAKE_ARCHIVES)
 
 $(PX4_ROOT)/Archives/px4fmu-v2.export:
+	@$(ECHO) "====== Invoking PX4_MAKE_ARCHIVES"
+	@$(ECHO) "====== NUTTX_SRC=$(NUTTX_SRC) PX4_ROOT=$(PX4_ROOT)"
 	$(v) $(PX4_MAKE_ARCHIVES)
+	@$(ECHO) "====== PX4_MAKE_ARCHIVES Complete"
 
 $(PX4_ROOT)/Archives/px4io-v1.export:
 	$(v) $(PX4_MAKE_ARCHIVES)

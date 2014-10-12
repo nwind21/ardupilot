@@ -111,6 +111,7 @@ while getopts ":I:VgGcj:TA:t:L:v:hwf:RNH" opt; do
       NUM_PROCS=$OPTARG
       ;;
     w)
+      echo "EEPROM WIPE  => YES"
       WIPE_EEPROM=1
       ;;
     h)
@@ -267,6 +268,9 @@ case $VEHICLE in
     ArduCopter)
         RUNSIM="nice $autotest/pysim/sim_multicopter.py --home=$SIMHOME --simin=$SIMIN_PORT --simout=$SIMOUT_PORT --fgout=$FG_PORT $EXTRA_SIM"
         PARMS="copter_params.parm"
+        echo "EXECUTING => ArduCopter Simulation"
+        echo "CMD => " $RUNSIM
+        echo "PARMS => " $PARMS
         ;;
     APMrover2)
         RUNSIM="nice $autotest/pysim/sim_rover.py --home=$SIMHOME --rate=400 $EXTRA_SIM"
@@ -322,5 +326,7 @@ fi
 if [ $START_HIL == 1 ]; then
     options="$options --load-module=HIL"
 fi
+echo "EXECUTING => Mav Proxy"
+echo "CMD => \"" $extra_cmd "\""
 mavproxy.py $options --cmd="$extra_cmd" $*
 kill_tasks

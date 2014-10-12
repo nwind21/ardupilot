@@ -17,7 +17,7 @@ def expect_list_extend(list):
     expect_list.extend(list)
 
 def idle_hook(mav):
-    '''called when waiting for a mavlink message'''
+    ''' called when waiting for a mavlink message '''
     global expect_list
     for p in expect_list:
         util.pexpect_drain(p)
@@ -225,8 +225,13 @@ def save_wp(mavproxy, mav):
 def wait_mode(mav, mode, timeout=None):
     print("Waiting for mode %s" % mode)
     mav.recv_match(condition='MAV.flightmode.upper()=="%s".upper()' % mode, timeout=timeout, blocking=True)
-    print("Got mode %s" % mode)
-    return mav.flightmode
+    print("Got mode [%s]" % mode)
+    # [2014/05/09] FC This appears to be wrong... the mavutil.py will only update this field on a mavlink heartbeat
+    # The logs clearly indicate a mode switch as occurred in some cases but the flightmode has not been updated.
+    # The conditional check for the revc_match, if true, should represent the internal state of the mavlink (assuming the
+    # HB is async and may/may not have been received to update.
+    # return mav.flightmode
+    return mode
 
 def mission_count(filename):
     '''load a mission from a file and return number of waypoints'''

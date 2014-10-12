@@ -25,23 +25,30 @@ class HAL_AVR_SITL;
 
 class AVR_SITL::SITL_State {
 public:
-    void init(int argc, char * const argv[]);
-
+    static void init(int argc, char * const argv[]);
+    static void cleanup();
     enum vehicle_type {
 	    ArduCopter,
 	    APMrover2,
 	    ArduPlane
     };
+    
+    struct threadCtx
+    {
+        void* zmqContext;
+        void (*func)(sitl_fdm& fdm, SITL* sitl );
+        int id;
+    };
 
-    int gps_pipe(void);
-    int gps2_pipe(void);
-    ssize_t gps_read(int fd, void *buf, size_t count);
+    static int gps_pipe(void);
+    static int gps2_pipe(void);
+    static ssize_t gps_read(int fd, void *buf, size_t count);
     static uint16_t pwm_output[11];
     static uint16_t last_pwm_output[11];
     static uint16_t pwm_input[8];
     static bool new_rc_input;
     static void loop_hook(void);
-    uint16_t base_port(void) const { return _base_port; }
+    static uint16_t base_port(void) { return _base_port; }
 
     // simulated airspeed, sonar and battery monitor
     static uint16_t sonar_pin_value;    // pin 0
@@ -49,14 +56,16 @@ public:
     static uint16_t voltage_pin_value;  // pin 13
     static uint16_t current_pin_value;  // pin 12
 
-private:
-    void _parse_command_line(int argc, char * const argv[]);
-    void _set_param_default(char *parm);
-    void _usage(void);
-    void _sitl_setup(void);
-    void _setup_fdm(void);
-    void _setup_timer(void);
-    void _setup_adc(void);
+
+    static void _parse_command_line(int argc, char * const argv[]);
+    static void _set_param_default(char *parm);
+    static void _usage(void);
+    static void _sitl_setup(void);
+    static void _setup_fdm(void);
+    static void _setup_mavlink_rctx(void);
+    static void _setup_zmq_fdm(void);
+    static void _setup_timer(void);
+    static void _setup_adc(void);
 
     // these methods are static as they are called
     // from the timer
@@ -89,7 +98,26 @@ private:
     static void _update_gps_nmea(const struct gps_data *d);
     static void _sbp_send_message(uint16_t msg_type, uint16_t sender_id, uint8_t len, uint8_t *payload);
     static void _update_gps_sbp(const struct gps_data *d, bool sim_rtk);
+    
+    ///////////
+    // Attached threads
+    static pthread_t _fdmUpdateProcessCtx;
+    static threadCtx gpsThreadCtx;
+    static threadCtx insThreadCtx;
+    static threadCtx compassThreadCtx;
+    static threadCtx barometerThreadCtx;
+    static void _fdmGPSUpdate( sitl_fdm& fdm,
+                               SITL* sitl );
+    static void _fdmInsUpdate( sitl_fdm& fdm,
+                               SITL* sitl );
+    static void _fdmCompassUpdate( sitl_fdm& fdm,
+                                   SITL* sitl );
+    static void _fdmBarometerUpdate( sitl_fdm& fdm,
+                                     SITL* sitl );
+    static void* _fdmSubscriber( void* arg );
 
+    //////////
+    // Update functions
     static void _update_gps(double latitude, double longitude, float altitude,
 			    double speedN, double speedE, double speedD, bool have_lock);
 
@@ -97,8 +125,11 @@ private:
 			    double rollRate, 	double pitchRate,double yawRate,	// Local to plane
 			    double xAccel, 	double yAccel, 	double zAccel,		// Local to plane
 			    float airspeed,	float altitude);
-    static void _fdm_input(void);
+
+    static void service_fdm( void* subscriber, sitl_fdm& fdm );
+    static void _service_rctx(void);
     static void _simulator_output(void);
+
     static void _apply_servo_filter(float deltat);
     static uint16_t _airspeed_sensor(float airspeed);
     static uint16_t _ground_sonar(float altitude);
@@ -114,7 +145,8 @@ private:
     static enum vehicle_type _vehicle;
     static uint16_t _framerate;
     static uint16_t _base_port;
-    float _initial_height;
+    static uint16_t _fdm_port;
+    static float _initial_height;
     static struct sockaddr_in _rcout_addr;
     static pid_t _parent_pid;
     static uint32_t _update_count;
@@ -125,10 +157,14 @@ private:
     static SITLScheduler *_scheduler;
     static AP_Compass_HIL *_compass;
 
-    static int _sitl_fd;
+    static int _rctx_fd;
+    static void* _zmq_context;
+    static void* _sitl_zmq_fdm_publisher;
+    static void* _sitl_zmq_fdm_kill;
+    static void* _sitl_zmq_fdm_sync;
     static SITL *_sitl;
     static uint16_t _rcout_port;
-    static uint16_t _simin_port;
+    static uint16_t _rctx_port;
     static float _current;
 };
 

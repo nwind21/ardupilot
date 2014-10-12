@@ -15,7 +15,7 @@ class Motor(object):
 def build_motors(frame):
     '''build a motors list given a frame type'''
     frame = frame.lower()
-    if frame in [ 'quad', '+', 'x' ]:
+    if frame in [ 'quadx', 'quad', '+', 'x' ]:
         motors = [
             Motor(90,  False,  1),
             Motor(270, False,  2),

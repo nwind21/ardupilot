@@ -8,8 +8,7 @@
 
 class AVR_SITL::SITLRCOutput : public AP_HAL::RCOutput {
 public:
-    SITLRCOutput(SITL_State *sitlState) {
-	    _sitlState = sitlState;
+    SITLRCOutput() {
 	    _freq_hz = 50;
     }
     void     init(void* machtnichts);
@@ -23,7 +22,6 @@ public:
     void     read(uint16_t* period_us, uint8_t len);
 
 private:    
-    SITL_State *_sitlState;
     uint16_t _freq_hz;
 };
 
