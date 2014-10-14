@@ -84,6 +84,13 @@
 #if HAL_CPU_CLASS < HAL_CPU_CLASS_75
  # define PARACHUTE DISABLED
  # define AC_RALLY DISABLED
+ # define CLI_ENABLED           DISABLED
+ # define FRSKY_TELEM_ENABLED   DISABLED
+#endif
+
+// disable sonar on APM1 and TradHeli/APM2
+#if (CONFIG_HAL_BOARD == HAL_BOARD_APM1 || (CONFIG_HAL_BOARD == HAL_BOARD_APM2 && FRAME_CONFIG == HELI_FRAME))
+ # define CONFIG_SONAR          DISABLED
 #endif
 
 #if HAL_CPU_CLASS < HAL_CPU_CLASS_75 || CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
@@ -613,7 +620,7 @@
  # define RATE_PITCH_D       		0.004f
 #endif
 #ifndef RATE_PITCH_IMAX
- # define RATE_PITCH_IMAX        	500
+ # define RATE_PITCH_IMAX        	1000
 #endif
 
 #ifndef RATE_YAW_P
