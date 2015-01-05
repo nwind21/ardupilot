@@ -101,7 +101,7 @@ bool AP_InertialSensor_HIL::get_gyro_health(uint8_t instance) const
     if (instance >= INS_MAX_INSTANCES) {
         return false;
     }
-    return (hal.scheduler->micros() - _last_gyro_usec[instance]) < 40000;
+    return (hal.scheduler->micros() - _last_gyro_usec[instance]) < HIL_MAX_LASTUPDATE_MS;
 }
 
 bool AP_InertialSensor_HIL::get_accel_health(uint8_t instance) const
@@ -109,7 +109,7 @@ bool AP_InertialSensor_HIL::get_accel_health(uint8_t instance) const
     if (instance >= INS_MAX_INSTANCES) {
         return false;
     }
-    return (hal.scheduler->micros() - _last_accel_usec[instance]) < 40000;
+    return (hal.scheduler->micros() - _last_accel_usec[instance]) < HIL_MAX_LASTUPDATE_MS;
 }
 
 uint8_t AP_InertialSensor_HIL::get_gyro_count(void) const

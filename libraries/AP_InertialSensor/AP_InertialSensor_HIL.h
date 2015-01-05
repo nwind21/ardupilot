@@ -6,6 +6,8 @@
 #include <AP_Progmem.h>
 #include "AP_InertialSensor.h"
 
+#define HIL_MAX_LASTUPDATE_MS  (40000)
+
 class AP_InertialSensor_HIL : public AP_InertialSensor
 {
 public:
