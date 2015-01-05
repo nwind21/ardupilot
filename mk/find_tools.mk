@@ -5,25 +5,10 @@
 #
 # Decide where we are going to look for tools
 #
-ifeq ($(SYSTYPE),Darwin)
-  # use the tools that come with Arduino
-  TOOLPATH :=  $(ARDUINO)/hardware/tools/avr/bin
-  # use BWK awk
-  AWK =  awk
-  FIND_TOOL    =  $(firstword $(wildcard $(addsuffix /$(1),$(TOOLPATH))))
-endif
 ifeq ($(SYSTYPE),Linux)
   # expect that tools are on the path
   TOOLPATH :=  $(subst :, ,$(PATH))
   FIND_TOOL    =  $(firstword $(wildcard $(addsuffix /$(1),$(TOOLPATH))))
-endif
-ifeq ($(findstring CYGWIN, $(SYSTYPE)),CYGWIN)
-  TOOLPATH :=  $(ARDUINO)/hardware/tools/avr/bin
-  FIND_TOOL    =  $(firstword $(wildcard $(addsuffix /$(1).exe,$(TOOLPATH))))
-endif
-ifeq ($(findstring MINGW, $(SYSTYPE)),MINGW)
-  TOOLPATH :=  $(ARDUINO)/hardware/tools/avr/bin
-  FIND_TOOL    =  $(firstword $(wildcard $(addsuffix /$(1).exe,$(TOOLPATH))))
 endif
 
 NATIVE_CXX     :=  g++

@@ -1,3 +1,5 @@
+$(info > in mk/board_avr.mk )
+
 TOOLCHAIN = AVR
 
 include $(MK_DIR)/find_arduino.mk
@@ -18,14 +20,14 @@ DEPFLAGS        =   -MD -MT $@
 CXXOPTS         =   -ffunction-sections -fdata-sections -fno-exceptions -fsigned-char
 COPTS           =   -ffunction-sections -fdata-sections -fsigned-char
 
-ASOPTS          =   -x assembler-with-cpp 
+ASOPTS          =   -x assembler-with-cpp
 LISTOPTS        =   -adhlns=$(@:.o=.lst)
 
 NATIVE_CPUFLAGS     = -D_GNU_SOURCE
 NATIVE_CPULDFLAGS   = -g
 NATIVE_OPTFLAGS     = -O0 -g
 
-AVR_CPUFLAGS        = -mmcu=$(MCU) -mcall-prologues 
+AVR_CPUFLAGS        = -mmcu=$(MCU) -mcall-prologues
 AVR_CPULDFLAGS      = -Wl,-m,avr6
 AVR_OPTFLAGS        = -Os
 
@@ -85,13 +87,13 @@ HARDWARE_CORE :=	$(shell grep $(BOARD).build.core $(BOARDFILE) | cut -d = -f 2)
 UPLOAD_SPEED :=	$(shell grep $(BOARD).upload.speed $(BOARDFILE) | cut -d = -f 2)
 
 # User can define USERAVRDUDEFLAGS = -V in their config.mk to skip verification
-USERAVRDUDEFLAGS ?= 
+USERAVRDUDEFLAGS ?=
 #make sure the avrdude conf file is referenced correctly in cygwin
-ifneq ($(findstring CYGWIN, $(SYSTYPE)),) 
+ifneq ($(findstring CYGWIN, $(SYSTYPE)),)
   USERAVRDUDEFLAGS := -C $(ARDUINO)/hardware/tools/avr/etc/avrdude.conf
 endif
 #make sure the avrdude conf file is referenced correctly in mingw
-ifneq ($(findstring MINGW, $(SYSTYPE)),) 
+ifneq ($(findstring MINGW, $(SYSTYPE)),)
   USERAVRDUDEFLAGS := -C $(ARDUINO)/hardware/tools/avr/etc/avrdude.conf
 endif
 #make sure the avrdude conf file is referenced correctly in darwin
@@ -110,10 +112,10 @@ ifeq ($(BOARD),mega)
 endif
 
 #On Cygwin, the wiring programmer will perform the DTR reset for us
-ifneq ($(findstring CYGWIN, $(SYSTYPE)),) 
+ifneq ($(findstring CYGWIN, $(SYSTYPE)),)
   UPLOAD_PROTOCOL	:=	wiring
 endif
- 
+
 ifeq ($(MCU),)
 $(error ERROR: Could not locate board $(BOARD) in $(BOARDFILE))
 endif
@@ -151,6 +153,7 @@ print-%:
 
 .PHONY: upload
 upload: $(SKETCHHEX)
+	$(info invoking board_avr.upload )
 	$(AVRDUDE) -c $(UPLOAD_PROTOCOL) -p $(MCU) -P $(PORT) -b$(UPLOAD_SPEED) $(USERAVRDUDEFLAGS) -U flash:w:$(SKETCHHEX):i
 
 debug:
@@ -172,16 +175,19 @@ jtag-program:
 
 # Link the final object
 $(SKETCHELF):	$(SKETCHOBJS) $(LIBOBJS)
+	$(info invoking board_avr.$(SKETCHELF) )
 	$(RULEHDR)
 	$(v)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Create the hex file
 $(SKETCHHEX):	$(SKETCHELF)
+	$(info invoking board_avr.$(SKETCHHEX) )
 	$(RULEHDR)
 	$(v)$(OBJCOPY) -O ihex -R .eeprom $< $@
 
 # Create the eep file
 $(SKETCHEEP):	$(SKETCHELF)
+	$(info invoking board_avr.$(SKETCHEEP) )
 	$(RULEHDR)
 	$(v)$(OBJCOPY) -O ihex -j.eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 $< $@
 
@@ -223,3 +229,4 @@ $(BUILDROOT)/libraries/%.o: $(SKETCHBOOK)/libraries/%.S
 	$(RULEHDR)
 	$(v)$(AS) $(ASFLAGS) -c -o $@ $< $(SLIB_INCLUDES)
 
+$(info < out mk/board_avr.mk )

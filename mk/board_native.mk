@@ -17,12 +17,8 @@ DEPFLAGS        =   -MD -MT $@
 CXXOPTS         =   -ffunction-sections -fdata-sections -fno-exceptions -fsigned-char
 COPTS           =   -ffunction-sections -fdata-sections -fsigned-char
 
-ASOPTS          =   -x assembler-with-cpp 
+ASOPTS          =   -x assembler-with-cpp
 
-# disable as this breaks distcc
-#ifneq ($(SYSTYPE),Darwin)
-#LISTOPTS        =   -adhlns=$(@:.o=.lst)
-#endif
 
 CPUFLAGS     = -D_GNU_SOURCE
 CPULDFLAGS   = -g
@@ -79,6 +75,7 @@ ALLDEPS			=	$(ALLOBJS:%.o=%.d)
 #
 
 all: $(SKETCHELF)
+	$(info invoking board_native.all )
 
 print-%:
 	echo "$*=$($*)"
@@ -92,7 +89,7 @@ print-%:
 
 # Link the final object
 $(SKETCHELF):	$(SKETCHOBJS) $(LIBOBJS)
-	@echo "Building $(SKETCHELF)"
+	$(info invoking board_native.$(SKETCHELF) )
 	$(RULEHDR)
 	$(v)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 

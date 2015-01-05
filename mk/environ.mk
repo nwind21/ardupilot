@@ -1,3 +1,5 @@
+$(info > in environ.mk)
+
 # find key paths and system type
 
 # Save the system type for later use.
@@ -14,14 +16,7 @@ export LANG=C
 # Locate the sketch sources based on the initial Makefile's path
 #
 SRCROOT			:=	$(realpath $(dir $(firstword $(MAKEFILE_LIST))))
-ifneq ($(findstring CYGWIN, $(SYSTYPE)),)
-  # Workaround a $(realpath ) bug on cygwin
-  ifeq ($(SRCROOT),)
-    SRCROOT	:=	$(shell cygpath -m ${CURDIR})
-    $(warning your realpath function is not working)
-    $(warning > setting SRCROOT to $(SRCROOT))
-  endif
-endif
+
 
 #
 # We need to know the location of the sketchbook.  If it hasn't been overridden,
@@ -48,10 +43,6 @@ else
     $(warning WARNING: sketchbook directory $(SKETCHBOOK) contains no libraries)
   endif
 endif
-ifneq ($(findstring CYGWIN, $(SYSTYPE)),)
-    # Convert cygwin path into a windows normal path
-    SKETCHBOOK	:= $(shell cygpath ${SKETCHBOOK})
-endif
 
 #
 # Work out the sketch name from the name of the source directory.
@@ -74,37 +65,8 @@ ifneq ($(findstring px4, $(MAKECMDGOALS)),)
 BUILDROOT		:=	$(SKETCHBOOK)/Build.$(SKETCH)
 endif
 
-ifneq ($(findstring vrbrain, $(MAKECMDGOALS)),)
-# when building vrbrain we need all sources to be inside the sketchbook directory
-# as the NuttX build system relies on it
-BUILDROOT		:=	$(SKETCHBOOK)/Build.$(SKETCH)
-endif
-
-ifneq ($(findstring vrubrain, $(MAKECMDGOALS)),)
-# when building vrbrain we need all sources to be inside the sketchbook directory
-# as the NuttX build system relies on it
-BUILDROOT		:=	$(SKETCHBOOK)/Build.$(SKETCH)
-endif
-
-ifneq ($(findstring vrhero, $(MAKECMDGOALS)),)
-# when building vrbrain we need all sources to be inside the sketchbook directory
-# as the NuttX build system relies on it
-BUILDROOT		:=	$(SKETCHBOOK)/Build.$(SKETCH)
-endif
-
 ifeq ($(BUILDROOT),)
 BUILDROOT		:=	$(abspath $(TMPDIR)/$(SKETCH).build)
-endif
-
-ifneq ($(findstring CYGWIN, $(SYSTYPE)),)
-  # Workaround a $(abspath ) bug on cygwin
-  ifeq ($(BUILDROOT),)
-    BUILDROOT	:=	C:$(TMPDIR)/$(SKETCH).build
-    $(warning your abspath function is not working)
-    $(warning > setting BUILDROOT to $(BUILDROOT))
-  else
-    BUILDROOT	:=	$(shell cygpath ${BUILDROOT})
-  endif
 endif
 
 # Jump over the next makefile sections when runing a "make configure"
@@ -115,7 +77,9 @@ ifneq ($(MAKECMDGOALS),configure)
 #
 # The Makefile calling us must specify BOARD
 #
+$(info including $(SKETCHBOOK)/config.mk)
 include $(SKETCHBOOK)/config.mk
+
 ifeq ($(PORT),)
 $(error ERROR: could not locate $(SKETCHBOOK)/config.mk, please run 'make configure' first and edit config.mk)
 endif
@@ -155,20 +119,6 @@ HAL_BOARD = HAL_BOARD_LINUX
 HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_LINUX_NAVIO
 endif
 
-ifneq ($(findstring vrbrain, $(MAKECMDGOALS)),)
-HAL_BOARD = HAL_BOARD_VRBRAIN
-HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_NONE
-endif
-
-ifneq ($(findstring vrubrain, $(MAKECMDGOALS)),)
-HAL_BOARD = HAL_BOARD_VRBRAIN
-HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_NONE
-endif
-
-ifneq ($(findstring vrhero, $(MAKECMDGOALS)),)
-HAL_BOARD = HAL_BOARD_VRBRAIN
-HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_NONE
-endif
 
 ifneq ($(findstring apm1, $(MAKECMDGOALS)),)
 HAL_BOARD = HAL_BOARD_APM1
@@ -180,15 +130,11 @@ HAL_BOARD = HAL_BOARD_APM2
 HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_AVR_APM2
 endif
 
-ifneq ($(findstring flymaple, $(MAKECMDGOALS)),)
-HAL_BOARD = HAL_BOARD_FLYMAPLE
-endif
-
-# default to APM2
+# default to PX4
 ifeq ($(HAL_BOARD),)
 #$(warning No HAL_BOARD in config.mk - defaulting to HAL_BOARD_APM2)
-HAL_BOARD = HAL_BOARD_APM2
-HAL_BOARD_SUBTYPE = HAL_BOARD_SUBTYPE_AVR_APM2
+$(info Defaulting to PX4 build)
+HAL_BOARD = HAL_BOARD_PX4
 endif
 
 HARDWARE		?=	arduino
@@ -200,4 +146,13 @@ ifneq ($(findstring apm1-1280, $(MAKECMDGOALS)),)
 BOARD = mega
 endif
 
+$(info define SRCROOT: $(SRCROOT) )
+$(info define SKETCH: $(SKETCH) )
+$(info define SKETCHBOOK: $(SKETCHBOOK) )
+$(info define BOARD: $(BOARD) )
+$(info define HAL_BOARD: $(HAL_BOARD) )
+$(info define HAL_BOARD_SUBTYPE: $(HAL_BOARD_SUBTYPE) )
+
 endif
+
+$(info < out environ.mk)

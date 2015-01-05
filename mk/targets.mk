@@ -1,3 +1,5 @@
+$(info > in targets.mk)
+
 default: all
 
 # convenient targets for our supported boards
@@ -16,12 +18,6 @@ apm1-1280: all
 apm2: HAL_BOARD = HAL_BOARD_APM2
 apm2: TOOLCHAIN = AVR
 apm2: all
-
-flymaple: HAL_BOARD = HAL_BOARD_FLYMAPLE
-flymaple: TOOLCHAIN = ARM
-flymaple: all
-flymaple-hil: EXTRAFLAGS += "-DHIL_MODE=HIL_MODE_ATTITUDE "
-flymaple-hil: flymaple
 
 linux: HAL_BOARD = HAL_BOARD_LINUX
 linux: TOOLCHAIN = NATIVE
@@ -80,5 +76,8 @@ etags:
 	cd .. && etags -f ArduPlane/TAGS --lang=c++ $$(git ls-files ArduPlane libraries)
 	cd .. && etags -f APMrover2/TAGS --lang=c++ $$(git ls-files APMrover2 libraries)
 
-clean:
+clean: $(info targets.mk invoking clean on $(BUILDROOT) )
 	@rm -fr $(BUILDROOT)
+
+
+$(info < out targets.mk)

@@ -1,3 +1,5 @@
+$(info > in ardupilot/mk/px4_targets.mk)
+
 # PX4 build is via external build system
 
 ifneq ($(PX4_ROOT),)
@@ -33,7 +35,6 @@ EXTRAFLAGS += -DNUTTX_GIT_VERSION="\"$(NUTTX_GIT_VERSION)\""
 EXTRAFLAGS += -DPX4_GIT_VERSION="\"$(PX4_GIT_VERSION)\""
 
 # we have different config files for V1 and V2
-PX4_V1_CONFIG_FILE=$(MK_DIR)/PX4/config_px4fmu-v1_APM.mk
 PX4_V2_CONFIG_FILE=$(MK_DIR)/PX4/config_px4fmu-v2_APM.mk
 
 SKETCHFLAGS=$(SKETCHLIBINCLUDES) -I$(PWD) -DARDUPILOT_BUILD -DCONFIG_HAL_BOARD=HAL_BOARD_PX4 -DSKETCHNAME="\\\"$(SKETCH)\\\"" -DSKETCH_MAIN=ArduPilot_main -DAPM_BUILD_DIRECTORY=APM_BUILD_$(SKETCH)
@@ -43,8 +44,8 @@ WARNFLAGS = -Wno-psabi -Wno-packed -Wno-error=double-promotion -Wno-error=unused
 # avoid PX4 submodules
 export GIT_SUBMODULES_ARE_EVIL = 1
 
-PX4_MAKE = $(v) GIT_SUBMODULES_ARE_EVIL=1 make -C $(SKETCHBOOK) -f $(PX4_ROOT)/Makefile EXTRADEFINES="$(SKETCHFLAGS) $(WARNFLAGS) "'$(EXTRAFLAGS)' APM_MODULE_DIR=$(SKETCHBOOK) SKETCHBOOK=$(SKETCHBOOK) PX4_ROOT=$(PX4_ROOT) NUTTX_SRC=$(NUTTX_SRC) MAXOPTIMIZATION="-Os" 
-PX4_MAKE_ARCHIVES = make -C $(PX4_ROOT) NUTTX_SRC=$(NUTTX_SRC) archives MAXOPTIMIZATION="-Os" 
+PX4_MAKE = $(v) GIT_SUBMODULES_ARE_EVIL=1 make -C $(SKETCHBOOK) -f $(PX4_ROOT)/Makefile EXTRADEFINES="$(SKETCHFLAGS) $(WARNFLAGS) "'$(EXTRAFLAGS)' APM_MODULE_DIR=$(SKETCHBOOK) SKETCHBOOK=$(SKETCHBOOK) PX4_ROOT=$(PX4_ROOT) NUTTX_SRC=$(NUTTX_SRC) MAXOPTIMIZATION="-Os"
+PX4_MAKE_ARCHIVES = make -C $(PX4_ROOT) NUTTX_SRC=$(NUTTX_SRC) archives MAXOPTIMIZATION="-Os"
 
 
 $(info define NUTTX_SRC: $(NUTTX_SRC))
@@ -54,7 +55,7 @@ $(info define PX4_MAKE_ARCHIVES: $(PX4_MAKE_ARCHIVES))
 
 .PHONY: module_mk
 module_mk:
-	$(info ====== Invoking PX4_MODULE_MK )
+	$(info invoking px4_targets.module_mk )
 	$(RULEHDR)
 	$(v) echo "# Auto-generated file - do not edit" > $(SKETCHBOOK)/module.mk.new
 	$(v) echo "MODULE_COMMAND = ArduPilot" >> $(SKETCHBOOK)/module.mk.new
@@ -63,18 +64,8 @@ module_mk:
 	$(v) cmp $(SKETCHBOOK)/module.mk $(SKETCHBOOK)/module.mk.new 2>/dev/null || mv $(SKETCHBOOK)/module.mk.new $(SKETCHBOOK)/module.mk
 	$(v) rm -f $(SKETCHBOOK)/module.mk.new
 
-# $(SKETCHCPP)  module_mk px4-io-v1
-px4-v1: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v1.export 
-	$(RULEHDR)
-	$(v) rm -f $(PX4_ROOT)/makefiles/$(PX4_V1_CONFIG_FILE)
-	$(v) cp $(PWD)/$(PX4_V1_CONFIG_FILE) $(PX4_ROOT)/makefiles/
-	$(v) $(PX4_MAKE) px4fmu-v1_APM
-	$(v) /bin/rm -f $(SKETCH)-v1.px4
-	$(v) cp $(PX4_ROOT)/Images/px4fmu-v1_APM.px4 $(SKETCH)-v1.px4
-	$(v) echo "PX4 $(SKETCH) Firmware is in $(SKETCH)-v1.px4"
-
-px4-v2: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v2.export $(SKETCHCPP) module_mk px4-io-v2
-	$(info ====== Executing px4-v2 )
+px4: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v2.export $(SKETCHCPP) module_mk px4-io-v2
+	$(info invoking px4_targets.px4 )
 	$(RULEHDR)
 	$(info ====== Removing PX4_ROOT config files )
 	$(v) rm -f $(PX4_ROOT)/makefiles/$(PX4_V2_CONFIG_FILE)
@@ -86,44 +77,28 @@ px4-v2: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v2.export $(SKETCHCP
 	$(v) cp $(PX4_ROOT)/Images/px4fmu-v2_APM.px4 $(SKETCH)-v2.px4
 	$(v) echo "PX4 $(SKETCH) Firmware is in $(SKETCH)-v2.px4"
 
-px4: px4-v1 px4-v2
-
 px4-clean: clean px4-archives-clean
+	$(info invoking px4_targets.px4-clean )
 	$(v) /bin/rm -rf $(PX4_ROOT)/makefiles/build $(PX4_ROOT)/Build
 
 px4-cleandep: clean
+	$(info invoking px4_targets.px4-cleandep )
 	$(v) find $(PX4_ROOT)/Build -type f -name '*.d' | xargs rm -f
 
-px4-v1-upload: px4-v1
-	$(RULEHDR)
-	$(v) $(PX4_MAKE) px4fmu-v1_APM upload
-
-px4-v2-upload: px4-v2
+#px4-v2-upload: px4-v2
+#$(v) $(PX4_MAKE) px4fmu-v2_APM upload
+#
+px4-upload:
+	$(info invoking px4_targets.px4-upload )
 	$(RULEHDR)
 	$(v) $(PX4_MAKE) px4fmu-v2_APM upload
 
-px4-upload: px4-v1-upload
-
 px4-archives-clean:
+	$(info invoking px4_targets.px4-archive-clean )
 	$(v) /bin/rm -rf $(PX4_ROOT)/Archives
 
-px4-io-v1: $(PX4_ROOT)/Archives/px4io-v1.export
-	$(info ===== px4-io-v1)
-	$(v) make -C $(PX4_ROOT) px4io-v1_default
-	$(v) /bin/rm -f px4io-v1.bin
-	$(v) cp $(PX4_ROOT)/Images/px4io-v1_default.bin px4io-v1.bin
-	$(v) cp $(PX4_ROOT)/Build/px4io-v1_default.build/firmware.elf px4io-v1.elf
-	$(v) mkdir -p $(MK_DIR)/PX4/ROMFS/px4io/
-	$(v) rm -f $(MK_DIR)/PX4/ROMFS/px4io/px4io.bin
-	$(v) cp px4io-v1.bin $(MK_DIR)/PX4/ROMFS/px4io/px4io.bin
-	$(v) mkdir -p $(MK_DIR)/PX4/ROMFS/bootloader/
-	$(v) rm -f $(MK_DIR)/PX4/ROMFS/bootloader/fmu_bl.bin
-	$(v) cp $(SKETCHBOOK)/mk/PX4/bootloader/px4fmu_bl.bin $(MK_DIR)/PX4/ROMFS/bootloader/fmu_bl.bin
-	$(v) echo "PX4IOv1 Firmware is in px4io-v1.bin"
-
-
 px4-io-v2: $(PX4_ROOT)/Archives/px4io-v2.export
-	$(info ====== Invoking PX4_IO_V2 )
+	$(info invoking px4_targets.px4-io-v2 )
 	$(v) make -C $(PX4_ROOT) px4io-v2_default
 	$(info ====== Removing px4io-v2.bin )
 	$(v) /bin/rm -f px4io-v2.bin
@@ -139,28 +114,18 @@ px4-io-v2: $(PX4_ROOT)/Archives/px4io-v2.export
 	$(v) cp $(SKETCHBOOK)/mk/PX4/bootloader/px4fmuv2_bl.bin $(MK_DIR)/PX4/ROMFS/bootloader/fmu_bl.bin
 	$(v) echo "PX4IOv2 Firmware is in px4io-v2.bin"
 
-px4-io: px4-io-v1 px4-io-v2
-
-
-$(PX4_ROOT)/Archives/px4fmu-v1.export:
-	$(info ====== Invoking PX4_MAKE_ARCHIVES )
-	$(info ====== NUTTX_SRC=$(NUTTX_SRC) PX4_ROOT=$(PX4_ROOT) )
-	$(v) $(PX4_MAKE_ARCHIVES)
-	$(info ====== PX4_MAKE_ARCHIVES Complete )
+px4-io: px4-io-v2
 
 $(PX4_ROOT)/Archives/px4fmu-v2.export:
-	$(info ====== Invoking PX4_MAKE_ARCHIVES )
-	$(info ====== NUTTX_SRC=$(NUTTX_SRC) PX4_ROOT=$(PX4_ROOT) )
-	$(v) $(PX4_MAKE_ARCHIVES)
-	$(info ====== PX4_MAKE_ARCHIVES Complete )
-
-$(PX4_ROOT)/Archives/px4io-v1.export:
+	$(info invoking px4_targets.$(PX4_ROOT)/Archives/px4fmu-v2.export )
 	$(v) $(PX4_MAKE_ARCHIVES)
 
 $(PX4_ROOT)/Archives/px4io-v2.export:
+	$(info invoking px4_targets.$(PX4_ROOT)/Archives/px4io-v2.export )
 	$(v) $(PX4_MAKE_ARCHIVES)
 
 px4-archives:
+	$(info invoking px4_targets.$(PX4_ROOT)/Archives/px4-archives )
 	$(v) $(PX4_MAKE_ARCHIVES)
 
 else
@@ -173,3 +138,5 @@ px4-clean: px4
 px4-upload: px4
 
 endif
+
+$(info < out ardupilot/mk/px4_targets.mk)
