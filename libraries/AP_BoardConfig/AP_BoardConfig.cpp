@@ -68,7 +68,6 @@ const AP_Param::GroupInfo AP_BoardConfig::var_info[] PROGMEM = {
     // @Description: Disabling this option will disable the use of the safety switch on PX4 for arming. Use of the safety switch is highly recommended, so you should leave this option set to 1 except in unusual circumstances.
     // @Values: 0:Disabled,1:Enabled
     AP_GROUPINFO("SAFETYENABLE",   3, AP_BoardConfig, _safety_enable, 1),
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
 #endif
 
     AP_GROUPEND
@@ -91,8 +90,8 @@ void AP_BoardConfig::init()
         hal.scheduler->panic("Unable to open /dev/px4fmu");
     }
     if (ioctl(fd, PWM_SERVO_SET_COUNT, _pwm_count.get()) != 0) {
-        hal.console->printf("RCOutput: Unable to setup alt PWM to %u channels\n", _pwm_count.get());  
-    }   
+        hal.console->printf("RCOutput: Unable to setup alt PWM to %u channels\n", _pwm_count.get());
+    }
     close(fd);
 
     hal.uartC->set_flow_control((AP_HAL::UARTDriver::flow_control)_ser1_rtscts.get());
@@ -103,8 +102,5 @@ void AP_BoardConfig::init()
     if (_safety_enable.get() == 0) {
         hal.rcout->force_safety_off();
     }
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-    /* configure the VRBRAIN driver for the right number of PWMs */
-
-#endif    
+#endif
 }

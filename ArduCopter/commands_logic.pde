@@ -18,9 +18,6 @@ static void do_yaw(const AP_Mission::Mission_Command& cmd);
 static void do_change_speed(const AP_Mission::Mission_Command& cmd);
 static void do_set_home(const AP_Mission::Mission_Command& cmd);
 static void do_roi(const AP_Mission::Mission_Command& cmd);
-#if PARACHUTE == ENABLED
-static void do_parachute(const AP_Mission::Mission_Command& cmd);
-#endif
 static bool verify_nav_wp(const AP_Mission::Mission_Command& cmd);
 static bool verify_circle(const AP_Mission::Mission_Command& cmd);
 static bool verify_spline_wp(const AP_Mission::Mission_Command& cmd);
@@ -115,16 +112,16 @@ static bool start_command(const AP_Mission::Mission_Command& cmd)
     case MAV_CMD_DO_SET_SERVO:
         ServoRelayEvents.do_set_servo(cmd.content.servo.channel, cmd.content.servo.pwm);
         break;
-        
+
     case MAV_CMD_DO_SET_RELAY:
         ServoRelayEvents.do_set_relay(cmd.content.relay.num, cmd.content.relay.state);
         break;
-        
+
     case MAV_CMD_DO_REPEAT_SERVO:
         ServoRelayEvents.do_repeat_servo(cmd.content.repeat_servo.channel, cmd.content.repeat_servo.pwm,
                                          cmd.content.repeat_servo.repeat_count, cmd.content.repeat_servo.cycle_time * 1000.0f);
         break;
-        
+
     case MAV_CMD_DO_REPEAT_RELAY:
         ServoRelayEvents.do_repeat_relay(cmd.content.repeat_relay.num, cmd.content.repeat_relay.repeat_count,
                                          cmd.content.repeat_relay.cycle_time * 1000.0f);
@@ -148,12 +145,6 @@ static bool start_command(const AP_Mission::Mission_Command& cmd)
 
     case MAV_CMD_DO_SET_CAM_TRIGG_DIST:
         camera.set_trigger_distance(cmd.content.cam_trigg_dist.meters);
-        break;
-#endif
-
-#if PARACHUTE == ENABLED
-    case MAV_CMD_DO_PARACHUTE:                          // Mission command to configure or release parachute
-        do_parachute(cmd);
         break;
 #endif
 
@@ -238,13 +229,6 @@ static bool verify_command(const AP_Mission::Mission_Command& cmd)
     case MAV_CMD_CONDITION_YAW:
         return verify_yaw();
         break;
-
-#if PARACHUTE == ENABLED
-    case MAV_CMD_DO_PARACHUTE:
-        // assume parachute was released successfully
-        return true;
-        break;
-#endif
 
     default:
         // return true if we do not recognise the command so that we move on to the next command
@@ -510,29 +494,6 @@ static void do_nav_guided(const AP_Mission::Mission_Command& cmd)
 }
 #endif  // NAV_GUIDED
 
-
-#if PARACHUTE == ENABLED
-// do_parachute - configure or release parachute
-static void do_parachute(const AP_Mission::Mission_Command& cmd)
-{
-    switch (cmd.p1) {
-        case PARACHUTE_DISABLE:
-            parachute.enabled(false);
-            Log_Write_Event(DATA_PARACHUTE_DISABLED);
-            break;
-        case PARACHUTE_ENABLE:
-            parachute.enabled(true);
-            Log_Write_Event(DATA_PARACHUTE_ENABLED);
-            break;
-        case PARACHUTE_RELEASE:
-            parachute_release();
-            break;
-        default:
-            // do nothing
-            break;
-    }
-}
-#endif
 
 /********************************************************************************/
 //	Verify Nav (Must) commands

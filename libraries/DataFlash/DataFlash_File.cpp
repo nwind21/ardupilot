@@ -1,6 +1,6 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-/* 
+/*
    DataFlash logging - file oriented variant
 
    This uses posix file IO to create log files called logs/NN.bin in the
@@ -46,25 +46,13 @@ DataFlash_File::DataFlash_File(const char *log_directory) :
 #if defined(CONFIG_ARCH_BOARD_PX4FMU_V1)
     // V1 gets IO errors with larger than 512 byte writes
     _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V40)
-    _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V45)
-    _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V50)
-    _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V51)
-    _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRUBRAIN_V51)
-    _writebuf_chunk(512),
-#elif defined(CONFIG_ARCH_BOARD_VRHERO_V10)
-    _writebuf_chunk(512),
 #else
     _writebuf_chunk(4096),
 #endif
     _writebuf_head(0),
     _writebuf_tail(0),
     _last_write_time(0)
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     ,_perf_write(perf_alloc(PC_ELAPSED, "DF_write")),
     _perf_fsync(perf_alloc(PC_ELAPSED, "DF_fsync")),
     _perf_errors(perf_alloc(PC_COUNT, "DF_errors"))
@@ -80,7 +68,7 @@ void DataFlash_File::Init(const struct LogStructure *structure, uint8_t num_type
     int ret;
     struct stat st;
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     // try to cope with an existing lowercase log directory
     // name. NuttX does not handle case insensitive VFAT well
     DIR *d = opendir("/fs/microsd/APM");
@@ -119,7 +107,7 @@ void DataFlash_File::Init(const struct LogStructure *structure, uint8_t num_type
     }
     if (_writebuf == NULL) {
         hal.console->printf("Out of memory for logging\n");
-        return;        
+        return;
     }
     _writebuf_head = _writebuf_tail = 0;
     _initialised = true;
@@ -141,7 +129,7 @@ bool DataFlash_File::NeedErase(void)
 }
 
 /*
-  construct a log file name given a log number. 
+  construct a log file name given a log number.
   Note: Caller must free.
  */
 char *DataFlash_File::_log_file_name(uint16_t log_num)
@@ -260,9 +248,9 @@ uint16_t DataFlash_File::find_last_log(void)
         memset(buf, 0, sizeof(buf));
         // PX4 doesn't have fscanf()
         if (fread(buf, 1, sizeof(buf)-1, f) > 0) {
-            sscanf(buf, "%u", &ret);            
+            sscanf(buf, "%u", &ret);
         }
-        fclose(f);    
+        fclose(f);
     }
     return ret;
 }
@@ -334,7 +322,7 @@ int16_t DataFlash_File::get_log_data(uint16_t log_num, uint16_t page, uint32_t o
             hal.console->printf("Log read open fail for %s - %s\n",
                                 fname, strerror(saved_errno));
             free(fname);
-            return -1;            
+            return -1;
         }
         free(fname);
         _read_offset = 0;
@@ -458,7 +446,7 @@ uint16_t DataFlash_File::start_new_log(void)
     fname = _lastlog_file_name();
     FILE *f = ::fopen(fname, "w");
     fprintf(f, "%u\r\n", (unsigned)log_num);
-    fclose(f);    
+    fclose(f);
     free(fname);
 
     return log_num;
@@ -468,7 +456,7 @@ uint16_t DataFlash_File::start_new_log(void)
   Read the log and print it on port
 */
 void DataFlash_File::LogReadProcess(uint16_t log_num,
-                                    uint16_t start_page, uint16_t end_page, 
+                                    uint16_t start_page, uint16_t end_page,
                                     void (*print_mode)(AP_HAL::BetterStream *port, uint8_t mode),
                                     AP_HAL::BetterStream *port)
 {
@@ -548,13 +536,13 @@ void DataFlash_File::LogReadProcess(uint16_t log_num,
  */
 void DataFlash_File::DumpPageInfo(AP_HAL::BetterStream *port)
 {
-    port->printf_P(PSTR("DataFlash: num_logs=%u\n"), 
-                   (unsigned)get_num_logs());    
+    port->printf_P(PSTR("DataFlash: num_logs=%u\n"),
+                   (unsigned)get_num_logs());
 }
 
 void DataFlash_File::ShowDeviceInfo(AP_HAL::BetterStream *port)
 {
-    port->printf_P(PSTR("DataFlash logs stored in %s\n"), 
+    port->printf_P(PSTR("DataFlash logs stored in %s\n"),
                    _log_directory);
 }
 
@@ -584,8 +572,8 @@ void DataFlash_File::ListAvailableLogs(AP_HAL::BetterStream *port)
                 struct stat st;
                 if (stat(filename, &st) == 0) {
                     struct tm *tm = gmtime(&st.st_mtime);
-                    port->printf_P(PSTR("Log %u in %s of size %u %u/%u/%u %u:%u\n"), 
-                                   (unsigned)log_num, 
+                    port->printf_P(PSTR("Log %u in %s of size %u %u/%u/%u %u:%u\n"),
+                                   (unsigned)log_num,
                                    filename,
                                    (unsigned)size,
                                    (unsigned)tm->tm_year+1900,
@@ -598,7 +586,7 @@ void DataFlash_File::ListAvailableLogs(AP_HAL::BetterStream *port)
             free(filename);
         }
     }
-    port->println();    
+    port->println();
 }
 
 
@@ -614,7 +602,7 @@ void DataFlash_File::_io_timer(void)
         return;
     }
     uint32_t tnow = hal.scheduler->micros();
-    if (nbytes < _writebuf_chunk && 
+    if (nbytes < _writebuf_chunk &&
         tnow - _last_write_time < 2000000UL) {
         // write in 512 byte chunks, but always write at least once
         // per 2 seconds if data is available
@@ -666,4 +654,3 @@ void DataFlash_File::_io_timer(void)
 }
 
 #endif // HAL_OS_POSIX_IO
-

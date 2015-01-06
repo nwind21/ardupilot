@@ -11,20 +11,18 @@
 #include "AP_Relay.h"
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_APM1
-#define RELAY_PIN 47
+    #define RELAY_PIN 47
 #elif CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
-#define RELAY_PIN 13
+    #define RELAY_PIN 13
 #elif CONFIG_HAL_BOARD == HAL_BOARD_PX4
-#ifdef CONFIG_ARCH_BOARD_PX4FMU_V1
-#define RELAY_PIN 111
-#else
-#define RELAY_PIN 54
-#endif
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-#define RELAY_PIN 33
+    #ifdef CONFIG_ARCH_BOARD_PX4FMU_V1
+        #define RELAY_PIN 111
+    #else
+        #define RELAY_PIN 54
+    #endif
 #else
 // no relay for this board
-#define RELAY_PIN -1
+    #define RELAY_PIN -1
 #endif
 
 const AP_Param::GroupInfo AP_Relay::var_info[] PROGMEM = {
@@ -72,7 +70,7 @@ AP_Relay::AP_Relay(void)
 }
 
 
-void AP_Relay::init() 
+void AP_Relay::init()
 {
     for (uint8_t i=0; i<AP_RELAY_NUM_RELAYS; i++) {
         if (_pin[i].get() != -1) {
@@ -81,8 +79,8 @@ void AP_Relay::init()
     }
 }
 
-void AP_Relay::on(uint8_t relay) 
-{    
+void AP_Relay::on(uint8_t relay)
+{
     if (relay < AP_RELAY_NUM_RELAYS && _pin[relay] != -1) {
         hal.gpio->pinMode(_pin[relay], HAL_GPIO_OUTPUT);
         hal.gpio->write(_pin[relay], 1);
@@ -90,7 +88,7 @@ void AP_Relay::on(uint8_t relay)
 }
 
 
-void AP_Relay::off(uint8_t relay) 
+void AP_Relay::off(uint8_t relay)
 {
     if (relay < AP_RELAY_NUM_RELAYS && _pin[relay] != -1) {
         hal.gpio->pinMode(_pin[relay], HAL_GPIO_OUTPUT);
@@ -99,7 +97,7 @@ void AP_Relay::off(uint8_t relay)
 }
 
 
-void AP_Relay::toggle(uint8_t relay) 
+void AP_Relay::toggle(uint8_t relay)
 {
     if (relay < AP_RELAY_NUM_RELAYS && _pin[relay] != -1) {
         bool ison = hal.gpio->read(_pin[relay]);
@@ -109,4 +107,3 @@ void AP_Relay::toggle(uint8_t relay)
             on(relay);
     }
 }
-

@@ -50,24 +50,6 @@ extern const AP_HAL::HAL& hal;
  #define ARSPD_DEFAULT_PIN 16
 #elif CONFIG_HAL_BOARD == HAL_BOARD_LINUX
  #define ARSPD_DEFAULT_PIN AP_AIRSPEED_I2C_PIN
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-#if defined(CONFIG_ARCH_BOARD_VRBRAIN_V40)
- #define ARSPD_DEFAULT_PIN 0
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V45)
- #define ARSPD_DEFAULT_PIN 0
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V50)
- #define ARSPD_DEFAULT_PIN 0
-#elif defined(CONFIG_ARCH_BOARD_VRBRAIN_V51)
- #define ARSPD_DEFAULT_PIN 0
-#elif defined(CONFIG_ARCH_BOARD_VRUBRAIN_V51)
-#if APM_BUILD_TYPE(APM_BUILD_ArduPlane)
- #define ARSPD_DEFAULT_PIN 1
-#else
- #define ARSPD_DEFAULT_PIN 0
-#endif
-#elif defined(CONFIG_ARCH_BOARD_VRHERO_V10)
- #define ARSPD_DEFAULT_PIN 0
-#endif
 #elif CONFIG_HAL_BOARD == HAL_BOARD_LINUX
  #define ARSPD_DEFAULT_PIN AP_AIRSPEED_I2C_PIN
 #else
@@ -124,7 +106,7 @@ const AP_Param::GroupInfo AP_Airspeed::var_info[] PROGMEM = {
 
 
 /*
-  this scaling factor converts from the old system where we used a 
+  this scaling factor converts from the old system where we used a
   0 to 4095 raw ADC value for 0-5V to the new system which gets the
   voltage in volts directly from the ADC driver
  */
@@ -136,7 +118,7 @@ void AP_Airspeed::init()
     _calibration.init(_ratio);
     _last_saved_ratio = _ratio;
     _counter = 0;
-    
+
     analog.init();
     digital.init();
 }
@@ -244,5 +226,5 @@ void AP_Airspeed::setHIL(float airspeed, float diff_pressure, float temperature)
     _raw_airspeed = airspeed;
     _airspeed = airspeed;
     _last_pressure = diff_pressure;
-    _last_update_ms         = hal.scheduler->millis();    
+    _last_update_ms         = hal.scheduler->millis();
 }

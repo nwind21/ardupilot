@@ -27,11 +27,6 @@ private:
     AP_Int8 _ser2_rtscts;
     AP_Int8 _safety_enable;
 #endif
-#if CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-
-#endif
 };
 
 #endif // __AP_BOARDCONFIG_H__
-
-

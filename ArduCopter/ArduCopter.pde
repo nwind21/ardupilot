@@ -19,8 +19,8 @@
  *  ArduCopter Version 3.0
  *  Creator:        Jason Short
  *  Lead Developer: Randy Mackay
- *  Lead Tester:    Marco Robustini 
- *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen, 
+ *  Lead Tester:    Marco Robustini
+ *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen,
                                                       Olivier Adler, Kevin Hester, Arthur Benemann, Jonathan Challinger, John Arne Birkeland,
                                                       Jean-Louis Naudin, Mike Smith, and more
  *  Thanks to:	Chris Anderson, Jordi Munoz, Jason Short, Doug Weibel, Jose Julio
@@ -93,8 +93,6 @@
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_AVR_SITL.h>
 #include <AP_HAL_PX4.h>
-#include <AP_HAL_VRBRAIN.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_HAL_Linux.h>
 #include <AP_HAL_Empty.h>
 
@@ -146,15 +144,6 @@
 #include <AP_BattMonitor.h>     // Battery monitor library
 #include <AP_BoardConfig.h>     // board configuration library
 #include <AP_Frsky_Telem.h>
-#if SPRAYER == ENABLED
-#include <AC_Sprayer.h>         // crop sprayer library
-#endif
-#if EPM_ENABLED == ENABLED
-#include <AP_EPM.h>				// EPM cargo gripper stuff
-#endif
-#if PARACHUTE == ENABLED
-#include <AP_Parachute.h>		// Parachute release library
-#endif
 #include <AP_Terrain.h>
 
 // AP_HAL to Arduino compatibility layer
@@ -726,25 +715,12 @@ AC_Fence    fence(&inertial_nav);
 AP_Rally rally(ahrs);
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-// Crop Sprayer
-////////////////////////////////////////////////////////////////////////////////
-#if SPRAYER == ENABLED
-static AC_Sprayer sprayer(&inertial_nav);
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // EPM Cargo Griper
 ////////////////////////////////////////////////////////////////////////////////
 #if EPM_ENABLED == ENABLED
 static AP_EPM epm;
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
-// Parachute release
-////////////////////////////////////////////////////////////////////////////////
-#if PARACHUTE == ENABLED
-static AP_Parachute parachute(relay);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -790,7 +766,7 @@ AP_Param param_loader(var_info);
   133  = 3hz
   400  = 1hz
   4000 = 0.1hz
-  
+
  */
 static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { rc_loop,               4,     10 },
@@ -826,7 +802,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { perf_update,        4000,     20 },
     { read_receiver_rssi,   40,      5 },
 #if FRSKY_TELEM_ENABLED == ENABLED
-    { telemetry_send,       80,     10 },	
+    { telemetry_send,       80,     10 },
 #endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     4,     10 },
@@ -891,7 +867,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { perf_update,        1000,     200 },
     { read_receiver_rssi,   10,      50 },
 #if FRSKY_TELEM_ENABLED == ENABLED
-    { telemetry_send,       20,     100 },	
+    { telemetry_send,       20,     100 },
 #endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     1,    100  },
@@ -912,7 +888,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
 
 
-void setup() 
+void setup()
 {
     cliSerial = hal.console;
 
@@ -1006,7 +982,7 @@ static void fast_loop()
 
     // run low level rate controllers that only require IMU data
     attitude_control.rate_controller_run();
-    
+
 #if FRAME_CONFIG == HELI_FRAME
     update_heli_control_dynamics();
 #endif //HELI_FRAME
@@ -1294,7 +1270,7 @@ static void update_GPS(void)
 
                         // set system clock for log timestamps
                         hal.util->set_system_clock(gps.time_epoch_usec());
-                        
+
                         if (g.compass_enabled) {
                             // Set compass declination automatically
                             compass.set_initial_location(gps.location().lat, gps.location().lng);
@@ -1306,7 +1282,7 @@ static void update_GPS(void)
                 }
             }
 
-            //If we are not currently armed, and we're ready to 
+            //If we are not currently armed, and we're ready to
             //enter RTK mode, then capture current state as home,
             //and enter RTK fixes!
             if (!motors.armed() && gps.can_calculate_base_pos()) {
@@ -1526,14 +1502,14 @@ static void tuning(){
     case CH6_RATE_PITCH_FF:
         g.pid_rate_pitch.ff(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_FF:
         g.pid_rate_roll.ff(tuning_value);
         break;
-        
+
     case CH6_RATE_YAW_FF:
         g.pid_rate_yaw.ff(tuning_value);
-        break;        
+        break;
 #endif
 
     case CH6_OPTFLOW_KP:
@@ -1596,27 +1572,27 @@ static void tuning(){
         // roll-pitch input smoothing
         g.rc_feel_rp = g.rc_6.control_in / 10;
         break;
-    
+
     case CH6_RATE_PITCH_KP:
         g.pid_rate_pitch.kP(tuning_value);
         break;
-        
+
     case CH6_RATE_PITCH_KI:
         g.pid_rate_pitch.kI(tuning_value);
         break;
-        
+
     case CH6_RATE_PITCH_KD:
         g.pid_rate_pitch.kD(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KP:
         g.pid_rate_roll.kP(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KI:
         g.pid_rate_roll.kI(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KD:
         g.pid_rate_roll.kD(tuning_value);
         break;
@@ -1624,4 +1600,3 @@ static void tuning(){
 }
 
 AP_HAL_MAIN();
-

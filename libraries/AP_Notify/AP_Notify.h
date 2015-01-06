@@ -68,11 +68,7 @@ private:
 #if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     ToshibaLED_PX4 toshibaled;
     ToneAlarm_PX4 tonealarm;
-#elif CONFIG_HAL_BOARD == HAL_BOARD_APM1 || CONFIG_HAL_BOARD == HAL_BOARD_APM2 
-    ExternalLED externalled;
-    Buzzer buzzer;
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-    ToshibaLED_I2C toshibaled;
+#elif CONFIG_HAL_BOARD == HAL_BOARD_APM1 || CONFIG_HAL_BOARD == HAL_BOARD_APM2
     ExternalLED externalled;
     Buzzer buzzer;
 #else

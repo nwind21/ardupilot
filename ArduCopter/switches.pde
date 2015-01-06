@@ -383,37 +383,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         break;
 #endif
 
-#if PARACHUTE == ENABLED
-    case AUX_SWITCH_PARACHUTE_ENABLE:
-        // Parachute enable/disable
-        parachute.enabled(ch_flag == AUX_SWITCH_HIGH);
-        break;
-
-    case AUX_SWITCH_PARACHUTE_RELEASE:
-        if (ch_flag == AUX_SWITCH_HIGH) {
-            parachute_manual_release();
-        }
-        break;
-
-    case AUX_SWITCH_PARACHUTE_3POS:
-        // Parachute disable, enable, release with 3 position switch
-        switch (ch_flag) {
-            case AUX_SWITCH_LOW:
-                parachute.enabled(false);
-                Log_Write_Event(DATA_PARACHUTE_DISABLED);
-                break;
-            case AUX_SWITCH_MIDDLE:
-                parachute.enabled(true);
-                Log_Write_Event(DATA_PARACHUTE_ENABLED);
-                break;
-            case AUX_SWITCH_HIGH:
-                parachute.enabled(true);
-                parachute_manual_release();
-                break;
-        }
-        break;
-#endif
-
     case AUX_SWITCH_MISSIONRESET:
         if (ch_flag == AUX_SWITCH_HIGH) {
             mission.reset();
@@ -429,7 +398,7 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         // enable or disable accel limiting by restoring defaults
         attitude_control.accel_limiting(ch_flag == AUX_SWITCH_HIGH);
         break;
-        
+
 #if MOUNT == ENABLE
     case AUX_SWITCH_RETRACT_MOUNT:
         switch (ch_flag) {
@@ -490,4 +459,3 @@ static void auto_trim()
         }
     }
 }
-
