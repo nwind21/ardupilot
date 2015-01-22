@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
 #include "AP_InertialSensor_Mock.h"
@@ -30,7 +30,7 @@ public:
 //   TESTS
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
-TEST_F( AP_InertialSensor_Init, ifAccelScaleZero_initializeToVectorOfOne )
+TEST_F( AP_InertialSensor_Init, IfAccelScaleZero_InitializeToVectorOfOne )
 {
     EXPECT_CALL( classUT, _init_sensor( Eq( AP_InertialSensor::RATE_50HZ ) ) )
         .Times(1);
@@ -46,7 +46,7 @@ TEST_F( AP_InertialSensor_Init, ifAccelScaleZero_initializeToVectorOfOne )
     //---------------------------------------------------------
 }
 
-TEST_F( AP_InertialSensor_Init, warmStart_doesNotInitGyro )
+TEST_F( AP_InertialSensor_Init, WarmStart_DoesNotInitGyro )
 {
     EXPECT_CALL( classUT, _init_sensor( Eq( AP_InertialSensor::RATE_50HZ ) ) )
         .Times(1);

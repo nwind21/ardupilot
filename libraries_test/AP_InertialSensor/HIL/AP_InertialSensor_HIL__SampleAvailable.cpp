@@ -1,8 +1,6 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
-#define private public
-#define protected public
 #include "AP_InertialSensor_HIL.h"
 
 using ::testing::Return;
@@ -33,11 +31,9 @@ public:
 TEST_F( AP_InertialSensor_HIL__SampleAvailable, ElapsedSamplePeriod_ReturnTrue )
 {
     EXPECT_CALL( MOCK_HAL.scheduler, micros())
-        .WillOnce( Return(0) )
-        .WillOnce( Return(20000) );
+        .WillOnce( Return( 20001 )  );
 
     classUT._init_sensor( AP_InertialSensor::RATE_50HZ );
-    classUT.update();
 
     //---------------------------------------------------------
     ASSERT_EQ( classUT._sample_available(),

@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
 #include "AP_InertialSensor_Mock.h"
@@ -35,4 +35,3 @@ TEST_F( AP_InertialSensor_InitGyro,  Stub )
 
     //---------------------------------------------------------
 }
-

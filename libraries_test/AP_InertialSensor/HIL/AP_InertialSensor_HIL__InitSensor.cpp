@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
 #define private public
@@ -47,4 +47,3 @@ TEST_F( AP_InertialSensor_HIL__InitSensor, ExceedMaxInstances_Ignored )
     }
     //---------------------------------------------------------
 }
-

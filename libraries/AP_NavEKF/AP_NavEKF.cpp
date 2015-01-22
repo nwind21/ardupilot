@@ -25,7 +25,7 @@
   where the code is built. Note that this trick won't work for arduino
   builds on APM2, but NavEKF doesn't run on APM2, so that's OK
  */
-#if APM_BUILD_TYPE(APM_BUILD_ArduCopter)
+#if APM_BUILD_TYPE == APM_BUILD_ArduCopter
 // copter defaults
 #define VELNE_NOISE_DEFAULT     0.5f
 #define VELD_NOISE_DEFAULT      0.7f
@@ -46,7 +46,7 @@
 #define GLITCH_ACCEL_DEFAULT    150
 #define GLITCH_RADIUS_DEFAULT   15
 
-#elif APM_BUILD_TYPE(APM_BUILD_APMrover2)
+#elif APM_BUILD_TYPE == APM_BUILD_APMrover2
 // rover defaults
 #define VELNE_NOISE_DEFAULT     0.5f
 #define VELD_NOISE_DEFAULT      0.7f

@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
 #define private public

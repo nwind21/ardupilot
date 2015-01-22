@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 #include <stdio.h>
 
@@ -19,8 +19,8 @@ using ::testing::Invoke;
 class AP_InertialSensor__InitGyro : public ::testing::Test
 {
 public:
-    void SetUp( ) { classUT.setGyroSimulator( &simulator ); } 
-    void TearDown( ) { simulator.clearAll(); } 
+    void SetUp( ) { classUT.setGyroSimulator( &simulator ); }
+    void TearDown( ) { simulator.clearAll(); }
 
 public:
     AP_InertialSensor_Mock classUT;
@@ -76,10 +76,10 @@ TEST_F( AP_InertialSensor__InitGyro, smallDrift_returnsApproxOffsets )
     EXPECT_CALL( classUT, update( ) )
         .WillRepeatedly( DoAll( Invoke( &classUT, &AP_InertialSensor_Mock::mockUpdateGyros ),
                                 Return( true ) ) );
-                                
+
     simulator.setAxisOffset( Vector3f( -1.0, 0.5, 0.3 ) );
     simulator.setAxisNoise( Vector3f( 0.1, 0.1, 0.1 ) );
-    
+
     //---------------------------------------------------------
     classUT._init_gyro( );
 

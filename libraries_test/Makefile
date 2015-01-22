@@ -13,11 +13,7 @@ etags:
 	cd .. && etags -f ArduPlane/TAGS --lang=c++ $$(git ls-files ArduPlane libraries)
 	cd .. && etags -f APMrover2/TAGS --lang=c++ $$(git ls-files APMrover2 libraries)
 
-clean:
-	@rm -fr $(BUILDROOT)
-
 #include $(MK_DIR)/sketch_sources.mk
-
 
 TOOLCHAIN = NATIVE
 
@@ -39,7 +35,7 @@ DEFINES        +=   -DCONFIG_HAL_BOARD=$(HAL_BOARD) -DSKETCH="\"GTEST\""
 WARNFLAGS       =   -Wformat -Wall -Wshadow -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-missing-field-initializers
 WARNFLAGS      +=   -Wwrite-strings -Wformat=2
 WARNFLAGSCXX    =   -Wno-reorder
-DEPFLAGS        =   -MD -MT 
+DEPFLAGS        =   -MD -MT
 
 #CXXOPTS         =   -ffunction-sections -fdata-sections -fno-exceptions -fsigned-char
 CXXOPTS         =   -fno-exceptions -fsigned-char
@@ -51,13 +47,13 @@ CPUFLAGS     = -D_GNU_SOURCE
 CPULDFLAGS   = -g
 OPTFLAGS     ?= -O0 -g
 
-CXXFLAGS        =   -g $(CPUFLAGS) $(DEFINES) $(LISTOPTS) $(OPTFLAGS)
+CXXFLAGS        =   -g -fprofile-arcs -ftest-coverage $(CPUFLAGS) $(DEFINES) $(LISTOPTS) $(OPTFLAGS)
 CXXFLAGS       +=   $(WARNFLAGS) $(WARNFLAGSCXX) $(DEPFLAGS) $(CXXOPTS)
-CFLAGS          =   -g $(CPUFLAGS) $(DEFINES) $(LISTOPTS) $(OPTFLAGS)
+CFLAGS          =   -g -fprofile-arcs -ftest-coverage $(CPUFLAGS) $(DEFINES) $(LISTOPTS) $(OPTFLAGS)
 CFLAGS         +=   $(WARNFLAGS) $(DEPFLAGS) $(COPTS)
 ASFLAGS         =   -g $(CPUFLAGS) $(DEFINES) $(LISTOPTS) $(DEPFLAGS)
 ASFLAGS        +=   $(ASOPTS)
-LDFLAGS         =   -g $(CPUFLAGS) $(OPTFLAGS) $(WARNFLAGS) -Wl,--gc-sections -Wl,-Map,$(MAPFILE)
+LDFLAGS         =   -g -fprofile-arcs $(CPUFLAGS) $(OPTFLAGS) $(WARNFLAGS) -Wl,--gc-sections -Wl,-Map,$(MAPFILE)
 LISTOPTS        =   -Wa,-adhlns=$(1:.o=.lst)
 
 ifeq ($(VERBOSE),)
@@ -82,15 +78,20 @@ APPLICATION_SOURCE_FOLDERS :=\
 LIBRARY_SOURCE_FOLDERS :=\
     $(LIBRARIES_RPATH)/AP_InertialSensor\
     $(LIBRARIES_RPATH)/AP_Baro\
+    $(LIBRARIES_RPATH)/AP_BattMonitor\
     $(LIBRARIES_RPATH)/AP_Compass\
+    $(LIBRARIES_RPATH)/AP_GPS\
     $(LIBRARIES_RPATH)/AP_HAL\
     $(LIBRARIES_RPATH)/AP_HAL/utility\
     $(LIBRARIES_RPATH)/AP_Param\
     $(LIBRARIES_RPATH)/AP_Math\
     $(LIBRARIES_RPATH)/AP_Mission\
+    $(LIBRARIES_RPATH)/AP_NavEKF\
     $(LIBRARIES_RPATH)/AP_Declination\
+    $(LIBRARIES_RPATH)/DataFlash\
     $(LIBRARIES_RPATH)/Filter\
     $(LIBRARIES_RPATH)/SITL\
+    $(LIBRARIES_RPATH)/StorageManager\
     $(LIBRARIES_RPATH)/GCS_MAVLink\
     $(LIBRARIES_RPATH)/AP_Notify
 
@@ -98,13 +99,16 @@ LIBRARY_EXPLICIT_SOURCE :=\
 
 
 INCLUDE_FOLDERS :=\
-    /usr/include/gtest\
+    /home/vagrant/gmock-1.7.0/include\
+    /home/vagrant/gmock-1.7.0/gtest/include\
     ./Harness\
     ./Harness/AP_HAL_Mock\
     ./Harness/AP_InertialSensor_Mock\
     $(LIBRARIES_RPATH)/AP_ADC\
+    $(LIBRARIES_RPATH)/AP_ADC_AnalogSource\
     $(LIBRARIES_RPATH)/AP_AHRS\
     $(LIBRARIES_RPATH)/AP_Airspeed\
+    $(LIBRARIES_RPATH)/AP_BattMonitor\
     $(LIBRARIES_RPATH)/AP_Compass\
     $(LIBRARIES_RPATH)/AP_Common\
     $(LIBRARIES_RPATH)/AP_GPS\
@@ -112,13 +116,15 @@ INCLUDE_FOLDERS :=\
     $(LIBRARIES_RPATH)/AP_Math\
     $(LIBRARIES_RPATH)/AP_NavEKF\
     $(LIBRARIES_RPATH)/AP_Progmem\
+    $(LIBRARIES_RPATH)/AP_Rally\
     $(LIBRARIES_RPATH)/AP_Terrain\
     $(LIBRARIES_RPATH)/AP_Vehicle\
     $(LIBRARIES_RPATH)/DataFlash\
     $(LIBRARIES_RPATH)/Filter
 
 LIBRARY_FOLDERS    := \
-    /usr/include/gtest\
+    /home/vagrant/gmock-1.7.0/lib/.libs\
+    /home/vagrant/gmock-1.7.0/gtest/lib/.libs\
     mavlink/include
 
 LIBRARIES := \
@@ -130,12 +136,15 @@ LIBRARIES := \
 
 APPLICATION_SOURCE   = $(foreach folder, $(APPLICATION_SOURCE_FOLDERS), $(wildcard $(folder)/*.cpp))
 LIBRARY_SOURCE       = $(foreach folder, $(LIBRARY_SOURCE_FOLDERS), $(wildcard $(folder)/*.cpp))
+LIBRARY_HEADER       = $(foreach folder, $(LIBRARY_SOURCE_FOLDERS), $(wildcard $(folder)/*.h))
 LIBRARY_SOURCE      += $(LIBRARY_EXPLICIT_SOURCE)
 APPLICATION_OBJECTS  = $(subst ./,,$(foreach source_file, $(APPLICATION_SOURCE), $(addsuffix .o,$(BUILDROOT)/$(dir $(source_file))$(notdir $(basename $(source_file))))))
 LIBRARY_OBJECTS      = $(subst ../,,$(foreach source_file, $(LIBRARY_SOURCE), $(addsuffix .o,$(BUILDROOT)/$(dir $(source_file))$(notdir $(basename $(source_file))))))
 CXX_INCLUDE_PATHS   := $(foreach folder, $(INCLUDE_FOLDERS) $(APPLICATION_SOURCE_FOLDERS), $(addprefix -I, $(folder)))
 CXX_INCLUDE_PATHS   += $(foreach folder, $(INCLUDE_FOLDERS) $(LIBRARY_SOURCE_FOLDERS), $(addprefix -I, $(folder)))
-CXX_LIBRARIES       := $(foreach library, $(LIBRARIES), $(addprefix -l, $(library)))
+CXX_LIBRARIES       := $(foreach library, $(LIBRARY_FOLDERS), $(addprefix -L, $(library)))
+CXX_LIBRARIES       += $(foreach library, $(LIBRARIES), $(addprefix -l, $(library)))
+
 
 ################################################################################
 # Built products
@@ -152,7 +161,8 @@ MAPFILE            = $(BUILDROOT)/libraries_gtest.map
 all: $(APPLICATION)
 
 run:
-	$(APPLICATION)
+	$(info $(OPTION))
+	$(APPLICATION) $(OPTION)
 
 # print-%:
 # echo "$*=$($*)"
@@ -176,10 +186,13 @@ PREREQUISITES:
 	@echo "========================================================================================"
 
 ################
-# Link the final object 
+# Link the final object
 $(APPLICATION): PREREQUISITES $(APPLICATION_OBJECTS) $(LIBRARY_OBJECTS)
-	@echo === LINKING... $(APPLICATION) ===
+	$(info === LINKING... $(APPLICATION) ===)
 	$(v)$(LD) $(LDFLAGS) $(APPLICATION_OBJECTS) $(LIBRARY_OBJECTS) -o $@ $(CXX_LIBRARIES)
+
+clean:
+	@rm -fr $(APPLICATION_OBJECTS) $(LIBRARY_OBJECTS)
 
 ################
 # Define the generic object to source dependency build rule

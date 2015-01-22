@@ -2,6 +2,7 @@
 
 #include "AP_InertialSensor_HIL.h"
 #include <AP_HAL.h>
+
 const extern AP_HAL::HAL& hal;
 
 AP_InertialSensor_HIL::AP_InertialSensor_HIL() :
@@ -10,6 +11,14 @@ AP_InertialSensor_HIL::AP_InertialSensor_HIL() :
     _last_sample_usec(0)
 {
     _accel[0] = Vector3f(0, 0, -GRAVITY_MSS);
+
+    // Clearing to last update time of zero.
+    memset( _last_accel_usec,
+            0,
+            sizeof(_last_accel_usec) );
+    memset( _last_gyro_usec,
+            0,
+            sizeof(_last_gyro_usec) );
 }
 
 uint16_t AP_InertialSensor_HIL::_init_sensor( Sample_rate sample_rate ) {
@@ -101,7 +110,7 @@ bool AP_InertialSensor_HIL::get_gyro_health(uint8_t instance) const
     if (instance >= INS_MAX_INSTANCES) {
         return false;
     }
-    return (hal.scheduler->micros() - _last_gyro_usec[instance]) < HIL_MAX_LASTUPDATE_MS;
+    return delta_u32( hal.scheduler->micros(), _last_gyro_usec[instance] ) < HIL_MAX_LASTUPDATE_MS;
 }
 
 bool AP_InertialSensor_HIL::get_accel_health(uint8_t instance) const
@@ -109,7 +118,7 @@ bool AP_InertialSensor_HIL::get_accel_health(uint8_t instance) const
     if (instance >= INS_MAX_INSTANCES) {
         return false;
     }
-    return (hal.scheduler->micros() - _last_accel_usec[instance]) < HIL_MAX_LASTUPDATE_MS;
+    return delta_u32( hal.scheduler->micros(), _last_accel_usec[instance] ) < HIL_MAX_LASTUPDATE_MS;
 }
 
 uint8_t AP_InertialSensor_HIL::get_gyro_count(void) const
@@ -127,4 +136,3 @@ uint8_t AP_InertialSensor_HIL::get_accel_count(void) const
     }
     return 1;
 }
-

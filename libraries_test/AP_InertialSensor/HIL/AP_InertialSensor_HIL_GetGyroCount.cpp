@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 
 #include "AP_InertialSensor_HIL.h"

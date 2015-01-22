@@ -1,4 +1,4 @@
-#include <gtest.h>
+#include "includes.h"
 #include "defines.h"
 #include <stdio.h>
 
@@ -19,8 +19,8 @@ using ::testing::Invoke;
 class AP_InertialSensor__InitAccel : public ::testing::Test
 {
 public:
-    void SetUp( ) { classUT.setAccelSimulator( &simulator ); } 
-    void TearDown( ) { simulator.clearAll(); } 
+    void SetUp( ) { classUT.setAccelSimulator( &simulator ); }
+    void TearDown( ) { simulator.clearAll(); }
 
 public:
     AP_InertialSensor_Mock classUT;
