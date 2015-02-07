@@ -12,8 +12,9 @@ I like to group my git clones by the root, so diydrones, tridge, mavlink etc wou
 
 ```
 git clone git://github.com/nwind21/ardupilot.git C:\<your git working root>\nwind21\ardupilot
-git clone git://github.com/nwind21/PX4Firmware.git C:\<your git working root>\diydrones\PX4Firmware
-git clone git://github.com/nwind21/PX4NuttX.git C:\<your git working root>\diydrones\PX4NuttX
+git clone git://github.com/nwind21/PX4Firmware.git C:\<your git working root>\nwind21\PX4Firmware
+git clone git://github.com/nwind21/PX4NuttX.git C:\<your git working root>\nwind21\PX4NuttX
+git clone git://github.com/mavlink/mavlink.git C:\<your git working root>\mavlink\mavlink
 ```
 
 <strong>Switch to the Arducopter-3.2 branch for all repositories.</strong>
