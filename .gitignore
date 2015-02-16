@@ -56,6 +56,10 @@ apm.pdef.xml
 /Tools/autotest/jsbsim/rascal_test.xml
 /Tools/autotest/test/logs/*
 /Tools/autotest/test.ArduCopter/logs/*
+/Tools/autotest/terrain/*.DAT
+/Tools/autotest/logs/*.BIN
+ArduCopter/build.txt
+ArduCopter/build.log
 ArduCopter/Debug/
 ArduCopter/terrain/*.DAT
 ArduCopter/test.ArduCopter/
