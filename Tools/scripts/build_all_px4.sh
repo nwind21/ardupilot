@@ -24,9 +24,4 @@ pushd ArduCopter
 make px4
 popd
 
-echo "Testing APMrover2 build"
-pushd APMrover2
-make px4
-popd
-
 exit 0

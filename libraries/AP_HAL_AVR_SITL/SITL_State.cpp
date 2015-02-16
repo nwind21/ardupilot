@@ -159,13 +159,6 @@ void SITL_State::_parse_command_line(int argc, char * const argv[])
 		if (_framerate == 0) {
 			_framerate = 200;
 		}
-	} else if (strcmp(SKETCH, "APMrover2") == 0) {
-		_vehicle = APMrover2;
-		if (_framerate == 0) {
-			_framerate = 50;
-		}
-		// set right default throttle for rover (allowing for reverse)
-        pwm_input[2] = 1500;
 	} else {
 		_vehicle = ArduPlane;
 		if (_framerate == 0) {
@@ -774,10 +767,6 @@ void SITL_State::_simulator_output(void)
 			pwm_output[0] = pwm_output[1] = pwm_output[3] = 1500;
 			pwm_output[7] = 1800;
 		}
-		if (_vehicle == APMrover2) {
-			pwm_output[0] = pwm_output[1] = pwm_output[2] = pwm_output[3] = 1500;
-			pwm_output[7] = 1800;
-		}
 		for (i=0; i<11; i++) {
             last_pwm_output[i] = pwm_output[i];
         }
@@ -813,14 +802,6 @@ void SITL_State::_simulator_output(void)
 			if (control.pwm[2] > 2000) control.pwm[2] = 2000;
 		}
 		_motors_on = ((control.pwm[2]-1000)/1000.0) > 0;
-	} else if (_vehicle == APMrover2) {
-		// add in engine multiplier
-		if (control.pwm[2] != 1500) {
-			control.pwm[2] = ((control.pwm[2]-1500) * _sitl->engine_mul) + 1500;
-			if (control.pwm[2] > 2000) control.pwm[2] = 2000;
-			if (control.pwm[2] < 1000) control.pwm[2] = 1000;
-		}
-		_motors_on = ((control.pwm[2]-1500)/500.0) != 0;
 	} else {
 		_motors_on = false;
         // apply engine multiplier to first motor

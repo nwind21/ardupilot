@@ -36,8 +36,8 @@ echo "Testing ArduCopter build"
 pushd ArduCopter
 
 # for b in all apm2 apm1-hil apm2-hil sitl apm2-heli linux; do
-# px4-v2 
-for b in all apm2 apm1-hil apm2-hil sitl apm2-heli linux; do
+# px4-v2
+for b in all apm2 sitl linux; do
     pwd
     if [ $INCREMENTAL -eq 0 ]
     then
@@ -48,29 +48,17 @@ done
 popd
 
 
-echo "Testing APMRover build"
-pushd APMrover2
-for b in all apm2 sitl apm2-hil linux; do
-    pwd
-    if [ $INCREMENTAL -eq 0 ]
-    then
-        make clean
-    fi
-    make $b -j4
-done
-popd
-
-echo "Testing AntennaTracker build"
-pushd AntennaTracker
-for b in apm2 sitl; do
-    pwd
-    if [ $INCREMENTAL -eq 0 ]
-    then
-       make clean
-    fi
-    make $b -j4
-done
-popd
+# echo "Testing AntennaTracker build"
+# pushd AntennaTracker
+# for b in apm2 sitl; do
+#     pwd
+#     if [ $INCREMENTAL -eq 0 ]
+#     then
+#        make clean
+#     fi
+#     make $b -j4
+# done
+# popd
 
 echo "Testing build of examples"
 examples="Tools/VARTest Tools/CPUInfo"
@@ -88,20 +76,6 @@ for d in $examples; do
     make sitl -j4
     popd
 done
-
-
-test -d ../libmaple && {
-echo "Testing flymaple build"
-for d in ArduPlane ArduCopter APMrover2; do
-    pushd $d
-    if [ $INCREMENTAL -eq 0 ]
-    then
-        make clean
-    fi
-    make flymaple -j4
-    popd
- done
-}
 
 pushd Tools/Replay
 if [ $INCREMENTAL -eq 0 ]

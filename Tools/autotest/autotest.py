@@ -117,7 +117,7 @@ parser.add_option("--timeout", default=3000, type='int', help='maximum runtime i
 
 opts, args = parser.parse_args()
 
-import  arducopter, arduplane, apmrover2
+import  arducopter, arduplane
 
 steps = [
     'prerequisites',
@@ -130,11 +130,6 @@ steps = [
     'build.ArduPlane',
     'defaults.ArduPlane',
     'fly.ArduPlane',
-
-    'build2560.APMrover2',
-    'build.APMrover2',
-    'defaults.APMrover2',
-    'drive.APMrover2',
 
     'build2560.ArduCopter',
     'build.ArduCopter',
@@ -171,9 +166,6 @@ def run_step(step):
     if step == 'build.ArduPlane':
         return util.build_SIL('ArduPlane')
 
-    if step == 'build.APMrover2':
-        return util.build_SIL('APMrover2')
-
     if step == 'build.ArduCopter':
         return util.build_SIL('ArduCopter')
 
@@ -183,17 +175,11 @@ def run_step(step):
     if step == 'build2560.ArduPlane':
         return util.build_AVR('ArduPlane', board='mega2560')
 
-    if step == 'build2560.APMrover2':
-        return util.build_AVR('APMrover2', board='mega2560')
-
     if step == 'defaults.ArduPlane':
         return get_default_params('ArduPlane')
 
     if step == 'defaults.ArduCopter':
         return get_default_params('ArduCopter')
-
-    if step == 'defaults.APMrover2':
-        return get_default_params('APMrover2')
 
     if step == 'fly.ArduCopter':
         return arducopter.fly_ArduCopter(viewerip=opts.viewerip, map=opts.map)
@@ -203,9 +189,6 @@ def run_step(step):
 
     if step == 'fly.ArduPlane':
         return arduplane.fly_ArduPlane(viewerip=opts.viewerip, map=opts.map)
-
-    if step == 'drive.APMrover2':
-        return apmrover2.drive_APMrover2(viewerip=opts.viewerip, map=opts.map)
 
     if step == 'build.All':
         return build_all()

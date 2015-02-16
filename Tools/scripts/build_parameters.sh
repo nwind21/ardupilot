@@ -24,13 +24,7 @@ set -e
     mkdir -p ../buildlogs/Parameters/ArduCopter
     /bin/cp Parameters.wiki Parameters.html *.pdef.xml ../buildlogs/Parameters/ArduCopter
 
-    ./Tools/autotest/param_metadata/param_parse.py --vehicle APMrover2
-    ./Tools/scripts/update_wiki.py --url http://rover.ardupilot.com $(cat $HOME/WP_Auth/rover.auth) --post-title='APMrover2 Parameters' Parameters.html
-    mkdir -p ../buildlogs/Parameters/APMrover2
-    /bin/cp Parameters.wiki Parameters.html *.pdef.xml ../buildlogs/Parameters/APMrover2
-
     ./Tools/autotest/param_metadata/param_parse.py --vehicle AntennaTracker
-    #./Tools/scripts/update_wiki.py --url http://rover.ardupilot.com $(cat $HOME/WP_Auth/rover.auth) --post-title='APMrover2 Parameters' Parameters.html
     mkdir -p ../buildlogs/Parameters/AntennaTracker
     /bin/cp Parameters.wiki Parameters.html *.pdef.xml ../buildlogs/Parameters/AntennaTracker
 }

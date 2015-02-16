@@ -220,50 +220,6 @@ build_arducopter() {
     popd
 }
 
-# build rover binaries
-build_rover() {
-    tag="$1"
-    echo "Building APMrover2 $tag binaries from $(pwd)"
-    pushd APMrover2
-    for b in apm1 apm2; do
-	echo "Building APMrover2 $b binaries"
-        checkout APMrover2 $tag $b || continue
-	ddir=$binaries/Rover/$hdate/$b
-	skip_build $tag $ddir && continue
-	make clean || continue
-	make $b -j4 || {
-            echo "Failed build of APMrover2 $b $tag"
-            error_count=$((error_count+1))
-            continue
-        }
-	copyit $TMPDIR/APMrover2.build/APMrover2.hex $ddir $tag
-	touch $binaries/Rover/$tag
-    done
-    test -n "$PX4_ROOT" && {
-	echo "Building APMrover2 PX4 binaries"
-	ddir=$binaries/Rover/$hdate/PX4
-        checkout APMrover2 $tag PX4 || {
-            checkout APMrover2 "latest" ""
-            popd
-            return
-        }
-	skip_build $tag $ddir || {
-	    make px4-clean &&
-	    make px4 || {
-                echo "Failed build of APMrover2 PX4 $tag"
-                error_count=$((error_count+1))
-                checkout APMrover2 "latest" ""
-                popd
-                return
-            }
-	    copyit APMrover2-v1.px4 $binaries/Rover/$hdate/PX4 $tag &&
-	    copyit APMrover2-v2.px4 $binaries/Rover/$hdate/PX4 $tag 
-	}
-    }
-    checkout APMrover2 "latest" ""
-    popd
-}
-
 # build antenna tracker binaries
 build_antennatracker() {
     tag="$1"
@@ -311,7 +267,6 @@ build_antennatracker() {
 for build in stable beta latest; do
     build_arduplane $build
     build_arducopter $build
-    build_rover $build
 done
 
 rm -rf $TMPDIR

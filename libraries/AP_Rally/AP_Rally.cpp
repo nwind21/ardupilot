@@ -16,8 +16,6 @@ StorageAccess AP_Rally::_storage(StorageManager::StorageRally);
     #define RALLY_LIMIT_KM_DEFAULT 2.0
   #elif APM_BUILD_TYPE(APM_BUILD_ArduPlane)
     #define RALLY_LIMIT_KM_DEFAULT 5.0
-  #elif APM_BUILD_TYPE(APM_BUILD_APMrover2)
-    #define RALLY_LIMIT_KM_DEFAULT 0.5
   #endif
 #endif  // APM_BUILD_DIRECTORY
 

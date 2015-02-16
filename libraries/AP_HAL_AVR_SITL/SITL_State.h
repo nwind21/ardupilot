@@ -29,7 +29,6 @@ public:
     static void cleanup();
     enum vehicle_type {
 	    ArduCopter,
-	    APMrover2,
 	    ArduPlane
     };
     

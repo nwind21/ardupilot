@@ -11,5 +11,3 @@ then
 	exit 0
 fi
 
-doxygen docs/config/apmrover2
-
