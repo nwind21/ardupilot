@@ -1,4 +1,4 @@
-$(info > in targets.mk)
+$(info > in mk/targets.mk)
 
 default: all
 
@@ -64,9 +64,6 @@ endef
 # generate targets of the form BOARD-FRAME and BOARD-FRAME-HIL
 $(foreach board,$(BOARDS),$(foreach frame,$(FRAMES),$(eval $(call frame_template,$(board),$(frame)))))
 
-apm2beta: EXTRAFLAGS += "-DAPM2_BETA_HARDWARE "
-apm2beta: apm2
-
 sitl-mount: EXTRAFLAGS += "-DMOUNT=ENABLED"
 sitl-mount: sitl
 
@@ -74,10 +71,10 @@ sitl-mount: sitl
 etags:
 	cd .. && etags -f ArduCopter/TAGS --lang=c++ $$(git ls-files ArduCopter libraries)
 	cd .. && etags -f ArduPlane/TAGS --lang=c++ $$(git ls-files ArduPlane libraries)
-	cd .. && etags -f APMrover2/TAGS --lang=c++ $$(git ls-files APMrover2 libraries)
 
-clean: $(info targets.mk invoking clean on $(BUILDROOT) )
+clean: px4-clean
+	$(info targets.mk invoking clean on $(BUILDROOT) )
 	@rm -fr $(BUILDROOT)
 
 
-$(info < out targets.mk)
+$(info < out mk/targets.mk)

@@ -1,4 +1,4 @@
-$(info > in ardupilot/mk/px4_targets.mk)
+$(info > in mk/px4_targets.mk)
 
 # PX4 build is via external build system
 
@@ -77,25 +77,20 @@ px4: $(BUILDROOT)/make.flags $(PX4_ROOT)/Archives/px4fmu-v2.export $(SKETCHCPP) 
 	$(v) cp $(PX4_ROOT)/Images/px4fmu-v2_APM.px4 $(SKETCH)-v2.px4
 	$(v) echo "PX4 $(SKETCH) Firmware is in $(SKETCH)-v2.px4"
 
-px4-clean: clean px4-archives-clean
+px4-clean:
 	$(info invoking px4_targets.px4-clean )
+	$(v) /bin/rm -f $(PX4_ROOT)/Images/px4fmu-v2_APM.px4
+	$(v) /bin/rm -rf $(PX4_ROOT)/Archives
 	$(v) /bin/rm -rf $(PX4_ROOT)/makefiles/build $(PX4_ROOT)/Build
-
-px4-cleandep: clean
-	$(info invoking px4_targets.px4-cleandep )
-	$(v) find $(PX4_ROOT)/Build -type f -name '*.d' | xargs rm -f
 
 #px4-v2-upload: px4-v2
 #$(v) $(PX4_MAKE) px4fmu-v2_APM upload
 #
+
 px4-upload:
 	$(info invoking px4_targets.px4-upload )
 	$(RULEHDR)
 	$(v) $(PX4_MAKE) px4fmu-v2_APM upload
-
-px4-archives-clean:
-	$(info invoking px4_targets.px4-archive-clean )
-	$(v) /bin/rm -rf $(PX4_ROOT)/Archives
 
 px4-io-v2: $(PX4_ROOT)/Archives/px4io-v2.export
 	$(info invoking px4_targets.px4-io-v2 )
@@ -139,4 +134,4 @@ px4-upload: px4
 
 endif
 
-$(info < out ardupilot/mk/px4_targets.mk)
+$(info < out mk/px4_targets.mk)

@@ -71,7 +71,7 @@ def build_examples():
 def build_parameters():
     '''run the param_parse.py script'''
     print("Running param_parse.py")
-    if util.run_cmd(util.reltopdir('Tools/autotest/param_metadata/param_parse.py'), dir=util.reltopdir('.')) != 0:
+    if util.run_cmd(util.reltopdir('Tools/autotest/param_metadata/param_parse.py') + " --vehicle Arducopter", dir=util.reltopdir('.')) != 0:
         print("Failed param_parse.py")
         return False
     return True
@@ -125,7 +125,7 @@ parser.add_option("--mode", type='string', default='kitchen-sink', help='fly onl
 
 opts, args = parser.parse_args()
 
-import  arducopter, arduplane, apmrover2
+import  arducopter, arduplane
 
 steps = {
     'kitchen-sink': [
@@ -139,11 +139,6 @@ steps = {
         'build.ArduPlane',
         'defaults.ArduPlane',
         'fly.ArduPlane',
-
-        'build2560.APMrover2',
-        'build.APMrover2',
-        'defaults.APMrover2',
-        'drive.APMrover2',
 
         'build2560.ArduCopter',
         'build.ArduCopter',
@@ -159,27 +154,6 @@ steps = {
         'build.All',
         'build.Examples',
         'build.Parameters',
-    ],
-    # ROVER MODES
-    'rover': [
-        'prerequesites',
-        'build.Parameters',
-        'build2560.APMrover2',
-        'build.APMrover2',
-        'defaults.APMrover2',
-        'drive.APMrover2',
-        'convertgpx',
-    ],
-    'build-rover': [
-        'prerequesites',
-        'build2560.APMrover2',
-        'build.APMrover2',
-        'defaults.APMrover2',
-    ],
-    'drive-rover': [
-        'prerequesites',
-        'drive.APMrover2',
-        'convertgpx',
     ],
     # PLANE MODES
     'plane': [
@@ -217,13 +191,13 @@ steps = {
         'build.ArduCopter',
     ],
     'fly-quadcopter' : [
-        'prerequesites',        
+        'prerequesites',
         'fly.ArduCopter',
 #        'fly.CopterAVC',
         'convertgpx',
     ]
     }
-    
+
 skipsteps = opts.skip.split(',')
 
 # ensure we catch timeouts
@@ -256,9 +230,6 @@ def run_step(step):
     if step == 'build.ArduPlane':
         return util.build_SIL('ArduPlane', flags=myFlags)
 
-    if step == 'build.APMrover2':
-        return util.build_SIL('APMrover2', flags=myFlags )
-
     if step == 'build.ArduCopter':
         return util.build_SIL('ArduCopter', flags=myFlags )
 
@@ -268,17 +239,11 @@ def run_step(step):
     if step == 'build2560.ArduPlane':
         return util.build_AVR('ArduPlane', board='mega2560')
 
-    if step == 'build2560.APMrover2':
-        return util.build_AVR('APMrover2', board='mega2560')
-
     if step == 'defaults.ArduPlane':
         return get_default_params('ArduPlane')
 
     if step == 'defaults.ArduCopter':
         return get_default_params('ArduCopter')
-
-    if step == 'defaults.APMrover2':
-        return get_default_params('APMrover2')
 
     if step == 'fly.ArduCopter':
         return arducopter.fly_ArduCopter(viewerip=opts.viewerip, map=opts.map)
@@ -288,9 +253,6 @@ def run_step(step):
 
     if step == 'fly.ArduPlane':
         return arduplane.fly_ArduPlane(viewerip=opts.viewerip, map=opts.map)
-
-    if step == 'drive.APMrover2':
-        return apmrover2.drive_APMrover2(viewerip=opts.viewerip, map=opts.map)
 
     if step == 'build.All':
         return build_all()
@@ -385,14 +347,9 @@ def write_fullresults():
     results.addfile('ArduCopter code size', 'ArduCopter.sizes.txt')
     results.addfile('ArduCopter stack sizes', 'ArduCopter.framesizes.txt')
     results.addfile('ArduCopter defaults', 'ArduCopter-defaults.parm')
-    results.addfile('APMrover2 build log', 'APMrover2.txt')
-    results.addfile('APMrover2 code size', 'APMrover2.sizes.txt')
-    results.addfile('APMrover2 stack sizes', 'APMrover2.framesizes.txt')
-    results.addfile('APMrover2 defaults', 'APMrover2-defaults.parm')
     results.addglob('APM:Libraries documentation', 'docs/libraries/index.html')
     results.addglob('APM:Plane documentation', 'docs/ArduPlane/index.html')
     results.addglob('APM:Copter documentation', 'docs/ArduCopter/index.html')
-    results.addglob('APM:Rover documentation', 'docs/APMrover2/index.html')
     results.addglobimage("Flight Track", '*.png')
 
     write_webresults(results)
@@ -405,8 +362,8 @@ def run_tests(steps):
     global results
 
     passed = True
-    failed = []    
-    
+    failed = []
+
     for step in steps:
         util.pexpect_close_all()
         if skip_step(step):
