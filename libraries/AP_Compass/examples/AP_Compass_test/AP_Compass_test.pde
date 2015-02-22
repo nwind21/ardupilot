@@ -11,9 +11,7 @@
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Linux.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_HAL_Empty.h>
-#include <AP_HAL_VRBRAIN.h>
 
 #include <AP_Math.h>    // ArduPilot Mega Vector/Matrix math Library
 #include <AP_Declination.h>
@@ -25,8 +23,6 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 
 #if CONFIG_COMPASS == HAL_COMPASS_PX4
 static AP_Compass_PX4 compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_VRBRAIN
-static AP_Compass_VRBRAIN compass;
 #elif CONFIG_COMPASS == HAL_COMPASS_HMC5843
 static AP_Compass_HMC5843 compass;
 #elif CONFIG_COMPASS == HAL_COMPASS_HIL
@@ -122,7 +118,7 @@ void loop()
 			    ToDeg(heading),
 			    (int)mag.x,
 			    (int)mag.y,
-			    (int)mag.z, 
+			    (int)mag.z,
 			    (unsigned)hal.i2c->lockup_count());
 
         // display offsets

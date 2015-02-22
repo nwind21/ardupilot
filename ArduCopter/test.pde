@@ -11,7 +11,7 @@ static int8_t   test_compass(uint8_t argc,              const Menu::arg *argv);
 static int8_t   test_ins(uint8_t argc,                  const Menu::arg *argv);
 static int8_t   test_optflow(uint8_t argc,              const Menu::arg *argv);
 static int8_t   test_relay(uint8_t argc,                const Menu::arg *argv);
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 static int8_t   test_shell(uint8_t argc,                const Menu::arg *argv);
 #endif
 #if HIL_MODE == HIL_MODE_DISABLED
@@ -30,7 +30,7 @@ const struct Menu::command test_menu_commands[] PROGMEM = {
     {"ins",                 test_ins},
     {"optflow",             test_optflow},
     {"relay",               test_relay},
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     {"shell", 				test_shell},
 #endif
 #if HIL_MODE == HIL_MODE_DISABLED
@@ -65,7 +65,7 @@ test_baro(uint8_t argc, const Menu::arg *argv)
         } else {
             cliSerial->printf_P(PSTR("Alt: %0.2fm, Raw: %f Temperature: %.1f\n"),
                                 baro_alt / 100.0,
-                                barometer.get_pressure(), 
+                                barometer.get_pressure(),
                                 barometer.get_temperature());
         }
         if(cliSerial->available() > 0) {
@@ -99,7 +99,7 @@ test_compass(uint8_t argc, const Menu::arg *argv)
     report_compass();
 
     // we need the AHRS initialised for this test
-    ins.init(AP_InertialSensor::COLD_START, 
+    ins.init(AP_InertialSensor::COLD_START,
              ins_sample_rate);
     ahrs.reset();
     int16_t counter = 0;
@@ -169,7 +169,7 @@ test_ins(uint8_t argc, const Menu::arg *argv)
     delay(1000);
 
     ahrs.init();
-    ins.init(AP_InertialSensor::COLD_START, 
+    ins.init(AP_InertialSensor::COLD_START,
              ins_sample_rate);
     cliSerial->printf_P(PSTR("...done\n"));
 
@@ -246,7 +246,7 @@ static int8_t test_relay(uint8_t argc, const Menu::arg *argv)
     }
 }
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 /*
  *  run a debug shell
  */
@@ -276,7 +276,7 @@ test_sonar(uint8_t argc, const Menu::arg *argv)
         sonar.update();
 
         cliSerial->printf_P(PSTR("Primary: health %d distance_cm %d \n"), (int)sonar.healthy(), sonar.distance_cm());
-        cliSerial->printf_P(PSTR("All: device_0 type %d health %d distance_cm %d, device_1 type %d health %d distance_cm %d\n"), 
+        cliSerial->printf_P(PSTR("All: device_0 type %d health %d distance_cm %d, device_1 type %d health %d distance_cm %d\n"),
         (int)sonar._type[0], (int)sonar.healthy(0), sonar.distance_cm(0), (int)sonar._type[1], (int)sonar.healthy(1), sonar.distance_cm(1));
 
         if(cliSerial->available() > 0) {

@@ -94,7 +94,7 @@ public:
         k_param_skip_gyro_cal,
         k_param_auto_fbw_steer,
         k_param_waypoint_max_radius,
-        k_param_ground_steer_alt,        
+        k_param_ground_steer_alt,
         k_param_ground_steer_dps,
         k_param_rally_limit_km_old, //unused anymore -- just holding this index
         k_param_hil_err_limit,
@@ -438,7 +438,7 @@ public:
     AP_Int8 flap_2_percent;
     AP_Int8 flap_2_speed;
     AP_Int8 rssi_pin;
-    AP_Float rssi_range;             // allows to set max voltage for rssi pin such as 5.0, 3.3 etc.     
+    AP_Float rssi_range;             // allows to set max voltage for rssi pin such as 5.0, 3.3 etc.
     AP_Int8 inverted_flight_ch;             // 0=disabled, 1-8 is channel for inverted flight trigger
     AP_Int8 stick_mixing;
     AP_Float takeoff_throttle_min_speed;
@@ -467,14 +467,14 @@ public:
     RC_Channel_aux rc_6;
     RC_Channel_aux rc_7;
     RC_Channel_aux rc_8;
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     RC_Channel_aux rc_9;
 #endif
-#if CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_PX4
     RC_Channel_aux rc_10;
     RC_Channel_aux rc_11;
 #endif
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     RC_Channel_aux rc_12;
     RC_Channel_aux rc_13;
     RC_Channel_aux rc_14;
@@ -492,14 +492,14 @@ public:
         rc_6                                    (CH_6),
         rc_7                                    (CH_7),
         rc_8                                    (CH_8),
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
         rc_9                                    (CH_9),
 #endif
-#if CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_PX4
         rc_10                                   (CH_10),
         rc_11                                   (CH_11),
 #endif
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
         rc_12                                   (CH_12),
         rc_13                                   (CH_13),
         rc_14                                   (CH_14),

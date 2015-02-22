@@ -11,7 +11,6 @@
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_AVR_SITL.h>
 #include <AP_HAL_Linux.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Empty.h>
 #include <AP_Math.h>
@@ -45,12 +44,8 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 AP_InertialSensor_MPU6000 ins;
 #elif CONFIG_INS_TYPE == HAL_INS_PX4
 AP_InertialSensor_PX4 ins;
-#elif CONFIG_INS_TYPE == HAL_INS_VRBRAIN
-AP_InertialSensor_VRBRAIN ins;
 #elif CONFIG_INS_TYPE == HAL_INS_HIL
 AP_InertialSensor_HIL ins;
-#elif CONFIG_INS_TYPE == HAL_INS_FLYMAPLE
-AP_InertialSensor_Flymaple ins;
 #elif CONFIG_INS_TYPE == HAL_INS_L3G4200D
 AP_InertialSensor_L3G4200D ins;
 #elif CONFIG_INS_TYPE == HAL_INS_MPU9250
@@ -69,7 +64,7 @@ void setup(void)
     hal.gpio->write(40, 1);
 #endif
 
-    ins.init(AP_InertialSensor::COLD_START, 
+    ins.init(AP_InertialSensor::COLD_START,
 			 AP_InertialSensor::RATE_100HZ);
 
     // display initial values
@@ -219,7 +214,7 @@ void run_test()
 
 		if (counter++ % 50 == 0) {
 			// display results
-			hal.console->printf_P(PSTR("Accel X:%4.2f \t Y:%4.2f \t Z:%4.2f \t len:%4.2f \t Gyro X:%4.2f \t Y:%4.2f \t Z:%4.2f\n"), 
+			hal.console->printf_P(PSTR("Accel X:%4.2f \t Y:%4.2f \t Z:%4.2f \t len:%4.2f \t Gyro X:%4.2f \t Y:%4.2f \t Z:%4.2f\n"),
 								  accel.x, accel.y, accel.z, length, gyro.x, gyro.y, gyro.z);
 		}
     }

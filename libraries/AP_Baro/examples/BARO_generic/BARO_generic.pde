@@ -27,7 +27,6 @@
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_AVR_SITL.h>
 #include <AP_HAL_Linux.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Empty.h>
 
@@ -39,8 +38,6 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 static AP_Baro_BMP085 barometer;
 #elif CONFIG_BARO == HAL_BARO_PX4
 static AP_Baro_PX4 barometer;
-#elif CONFIG_BARO == HAL_BARO_VRBRAIN
-static AP_Baro_VRBRAIN barometer;
 #elif CONFIG_BARO == HAL_BARO_HIL
 static AP_Baro_HIL barometer;
 #elif CONFIG_BARO == HAL_BARO_MS5611

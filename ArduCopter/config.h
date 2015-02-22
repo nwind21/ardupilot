@@ -104,7 +104,7 @@
  # define MAIN_LOOP_SECONDS 0.005
  # define MAIN_LOOP_MICROS  5000
 #else
- // high power CPUs (Flymaple, PX4, Pixhawk, VRBrain)
+ // high power CPUs (PX4, Pixhawk)
  # define MAIN_LOOP_RATE    400
  # define MAIN_LOOP_SECONDS 0.0025
  # define MAIN_LOOP_MICROS  2500
@@ -189,11 +189,9 @@
 #elif CONFIG_HAL_BOARD == HAL_BOARD_APM2
 #elif CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
 #elif CONFIG_HAL_BOARD == HAL_BOARD_PX4
-#elif CONFIG_HAL_BOARD == HAL_BOARD_FLYMAPLE
 #elif CONFIG_HAL_BOARD == HAL_BOARD_LINUX
  # define LED_ON           LOW
  # define LED_OFF          HIGH
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -379,7 +377,7 @@
  #ifndef COMPASS_OFFSETS_MAX
   # define COMPASS_OFFSETS_MAX          600         // PX4 onboard compass has high offsets
  #endif
-#else   // APM1, APM2, SITL, FLYMAPLE, etc
+#else   // APM1, APM2, SITL,  etc
  #ifndef COMPASS_OFFSETS_MAX
   # define COMPASS_OFFSETS_MAX          500
  #endif
@@ -781,7 +779,7 @@
     MASK_LOG_CMD | \
     MASK_LOG_CURRENT
 #else
- // PX4, Pixhawk, FlyMaple default logging
+ // PX4, Pixhawk, default logging
  # define DEFAULT_LOG_BITMASK \
     MASK_LOG_ATTITUDE_MED | \
     MASK_LOG_GPS | \

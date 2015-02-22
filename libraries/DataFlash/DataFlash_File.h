@@ -1,6 +1,6 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-/* 
+/*
    DataFlash logging - file oriented variant
 
    This uses posix file IO to create log files called logNN.dat in the
@@ -10,7 +10,7 @@
 #ifndef DataFlash_File_h
 #define DataFlash_File_h
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 #include <systemlib/perf_counter.h>
 #else
 #define perf_begin(x)
@@ -44,7 +44,7 @@ public:
     uint16_t get_num_logs(void);
     uint16_t start_new_log(void);
     void LogReadProcess(uint16_t log_num,
-                        uint16_t start_page, uint16_t end_page, 
+                        uint16_t start_page, uint16_t end_page,
                         void (*print_mode)(AP_HAL::BetterStream *port, uint8_t mode),
                         AP_HAL::BetterStream *port);
     void DumpPageInfo(AP_HAL::BetterStream *port);
@@ -84,7 +84,7 @@ private:
 
     void _io_timer(void);
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     // performance counters
     perf_counter_t  _perf_write;
     perf_counter_t  _perf_fsync;
@@ -94,4 +94,3 @@ private:
 
 
 #endif // DataFlash_File_h
-

@@ -21,7 +21,6 @@
 #include <AP_HAL_Linux.h>
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Empty.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_Notify.h>          // Notify library
 #include <ToshibaLED.h>
 #include <AP_AHRS.h>

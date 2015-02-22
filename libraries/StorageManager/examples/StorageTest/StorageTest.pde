@@ -11,7 +11,6 @@
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_AVR_SITL.h>
 #include <AP_HAL_Linux.h>
-#include <AP_HAL_FLYMAPLE.h>
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Empty.h>
 #include <AP_Math.h>
@@ -46,7 +45,7 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 /*
   instantiate all 4 storage types
  */
-static StorageAccess all_storage[4] = { 
+static StorageAccess all_storage[4] = {
     StorageAccess(StorageManager::StorageParam),
     StorageAccess(StorageManager::StorageMission),
     StorageAccess(StorageManager::StorageFence),

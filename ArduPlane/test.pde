@@ -21,7 +21,7 @@ static int8_t   test_mag(uint8_t argc,                  const Menu::arg *argv);
 static int8_t   test_xbee(uint8_t argc,                 const Menu::arg *argv);
 static int8_t   test_modeswitch(uint8_t argc,           const Menu::arg *argv);
 static int8_t   test_logging(uint8_t argc,              const Menu::arg *argv);
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 static int8_t   test_shell(uint8_t argc,              const Menu::arg *argv);
 #endif
 
@@ -59,7 +59,7 @@ static const struct Menu::command test_menu_commands[] PROGMEM = {
     {"compass",             test_mag},
 #endif
     {"logging",             test_logging},
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     {"shell", 				test_shell},
 #endif
 
@@ -345,7 +345,7 @@ test_logging(uint8_t argc, const Menu::arg *argv)
     return 0;
 }
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 /*
  *  run a debug shell
  */
@@ -418,13 +418,13 @@ test_ins(uint8_t argc, const Menu::arg *argv)
     ahrs.set_fly_forward(true);
     ahrs.set_wind_estimation(true);
 
-    ins.init(AP_InertialSensor::COLD_START, 
+    ins.init(AP_InertialSensor::COLD_START,
              ins_sample_rate);
     ahrs.reset();
 
     print_hit_enter();
     delay(1000);
-    
+
     uint8_t counter = 0;
 
     while(1) {
@@ -482,7 +482,7 @@ test_mag(uint8_t argc, const Menu::arg *argv)
     report_compass();
 
     // we need the AHRS initialised for this test
-    ins.init(AP_InertialSensor::COLD_START, 
+    ins.init(AP_InertialSensor::COLD_START,
              ins_sample_rate);
     ahrs.reset();
 
@@ -583,7 +583,7 @@ test_pressure(uint8_t argc, const Menu::arg *argv)
         } else {
             cliSerial->printf_P(PSTR("Alt: %0.2fm, Raw: %f Temperature: %.1f\n"),
                                 barometer.get_altitude(),
-                                barometer.get_pressure(), 
+                                barometer.get_pressure(),
                                 barometer.get_temperature());
         }
 

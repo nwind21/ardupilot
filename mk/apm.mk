@@ -71,10 +71,12 @@ TMPDIR			?=	/tmp
 ifneq ($(findstring px4, $(MAKECMDGOALS)),)
 # when building px4 we need all sources to be inside the sketchbook directory
 # as the NuttX build system relies on it
+$(info BUILDROOT sketchbook)
 BUILDROOT		:=	$(SKETCHBOOK)/Build.$(SKETCH)
 endif
 
 ifeq ($(BUILDROOT),)
+$(info BUILDROOT being set from abs path)
 BUILDROOT		:=	$(abspath $(TMPDIR)/$(SKETCH).build)
 endif
 
@@ -159,6 +161,7 @@ $(info define SRCROOT: $(SRCROOT) )
 $(info define SKETCH: $(SKETCH) )
 $(info define SKETCHBOOK: $(SKETCHBOOK) )
 $(info define BOARD: $(BOARD) )
+$(info define BUILDROOT: $(BUILDROOT) )
 $(info define HAL_BOARD: $(HAL_BOARD) )
 $(info define HAL_BOARD_SUBTYPE: $(HAL_BOARD_SUBTYPE) )
 

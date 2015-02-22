@@ -18,7 +18,7 @@
 #define POSCONTROL_ACCELERATION_MIN             50.0f   // minimum horizontal acceleration in cm/s/s - used for sanity checking acceleration in leash length calculation
 #define POSCONTROL_ACCEL_XY                     100.0f  // default horizontal acceleration in cm/s/s.  This is overwritten by waypoint and loiter controllers
 #define POSCONTROL_ACCEL_XY_MAX                 980.0f  // max horizontal acceleration in cm/s/s that the position velocity controller will ask from the lower accel controller
-#define POSCONTROL_STOPPING_DIST_Z_MAX          200.0f  // max stopping distance vertically   
+#define POSCONTROL_STOPPING_DIST_Z_MAX          200.0f  // max stopping distance vertically
                                                         // should be 1.5 times larger than POSCONTROL_ACCELERATION.
                                                         // max acceleration = max lean angle * 980 * pi / 180.  i.e. 23deg * 980 * 3.141 / 180 = 393 cm/s/s
 #define POSCONTROL_TAKEOFF_JUMP_CM                0.0f  // during take-off altitude target is set to current altitude + this value
@@ -38,7 +38,7 @@
 
 #define POSCONTROL_ACCEL_Z_DTERM_FILTER         20      // Z axis accel controller's D term filter (in hz)
 
-#define POSCONTROL_VEL_UPDATE_TIME              0.020f  // 50hz update rate on high speed CPUs (Pixhawk, Flymaple)
+#define POSCONTROL_VEL_UPDATE_TIME              0.020f  // 50hz update rate on high speed CPUs (Pixhawk)
 
 #define POSCONTROL_VEL_ERROR_CUTOFF_FREQ        4.0     // 4hz low-pass filter on velocity error
 #define POSCONTROL_ACCEL_ERROR_CUTOFF_FREQ      2.0     // 2hz low-pass filter on accel error

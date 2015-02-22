@@ -69,10 +69,6 @@ if [ ! -d PX4NuttX ]; then
     git clone https://github.com/diydrones/PX4NuttX.git
 fi
 
-if [ ! -d VRNuttX ]; then
-    git clone https://github.com/virtualrobotix/vrbrain_nuttx.git VRNuttX
-fi
-
 if [ ! -d $OPT/$ARM_ROOT ]; then
     (
         cd $OPT;
@@ -101,4 +97,3 @@ if ! grep -Fxq "$exportline2" ~/.profile ; then
         echo "Skipping adding $CWD/$ARDUPILOT_TOOLS to PATH."
     fi
 fi
-

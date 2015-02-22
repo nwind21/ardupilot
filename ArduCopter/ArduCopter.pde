@@ -251,8 +251,6 @@ static AP_Int8 *flight_modes = &g.flight_mode1;
 static AP_Baro_BMP085 barometer;
 #elif CONFIG_BARO == HAL_BARO_PX4
 static AP_Baro_PX4 barometer;
-#elif CONFIG_BARO == HAL_BARO_VRBRAIN
-static AP_Baro_VRBRAIN barometer;
 #elif CONFIG_BARO == HAL_BARO_HIL
 static AP_Baro_HIL barometer;
 #elif CONFIG_BARO == HAL_BARO_MS5611
@@ -266,8 +264,6 @@ static Baro_Glitch baro_glitch(barometer);
 
 #if CONFIG_COMPASS == HAL_COMPASS_PX4
 static AP_Compass_PX4 compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_VRBRAIN
-static AP_Compass_VRBRAIN compass;
 #elif CONFIG_COMPASS == HAL_COMPASS_HMC5843
 static AP_Compass_HMC5843 compass;
 #elif CONFIG_COMPASS == HAL_COMPASS_HIL
@@ -284,14 +280,10 @@ AP_ADC_ADS7844 apm1_adc;
 AP_InertialSensor_MPU6000 ins;
 #elif CONFIG_INS_TYPE == HAL_INS_PX4
 AP_InertialSensor_PX4 ins;
-#elif CONFIG_INS_TYPE == HAL_INS_VRBRAIN
-AP_InertialSensor_VRBRAIN ins;
 #elif CONFIG_INS_TYPE == HAL_INS_HIL
 AP_InertialSensor_HIL ins;
 #elif CONFIG_INS_TYPE == HAL_INS_OILPAN
 AP_InertialSensor_Oilpan ins( &apm1_adc );
-#elif CONFIG_INS_TYPE == HAL_INS_FLYMAPLE
-AP_InertialSensor_Flymaple ins;
 #elif CONFIG_INS_TYPE == HAL_INS_L3G4200D
 AP_InertialSensor_L3G4200D ins;
 #elif CONFIG_INS_TYPE == HAL_INS_MPU9250

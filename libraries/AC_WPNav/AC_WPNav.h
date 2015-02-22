@@ -36,8 +36,8 @@
  # define WPNAV_LOITER_UPDATE_TIME      0.095f      // 10hz update rate on low speed CPUs (APM1, APM2)
  # define WPNAV_WP_UPDATE_TIME          0.095f      // 10hz update rate on low speed CPUs (APM1, APM2)
 #else
- # define WPNAV_LOITER_UPDATE_TIME      0.020f      // 50hz update rate on high speed CPUs (Pixhawk, Flymaple)
- # define WPNAV_WP_UPDATE_TIME          0.020f      // 50hz update rate on high speed CPUs (Pixhawk, Flymaple)
+ # define WPNAV_LOITER_UPDATE_TIME      0.020f      // 50hz update rate on high speed CPUs (Pixhawk)
+ # define WPNAV_WP_UPDATE_TIME          0.020f      // 50hz update rate on high speed CPUs (Pixhawk)
 #endif
 
 #define WPNAV_LOITER_ACTIVE_TIMEOUT_MS     200      // loiter controller is considered active if it has been called within the past 200ms (0.2 seconds)

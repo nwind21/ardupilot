@@ -22,15 +22,11 @@
     #define EPM_PIN_2       62    // Off pin - AN8
     #define EPM_SUPPORTED   true
 #elif CONFIG_HAL_BOARD == HAL_BOARD_APM1
-    #define EPM_PIN_1       -1    // to be determine 
+    #define EPM_PIN_1       -1    // to be determine
     #define EPM_PIN_2       -1    // to be determine
     #define EPM_SUPPORTED   false
 #elif CONFIG_HAL_BOARD == HAL_BOARD_PX4
-    #define EPM_PIN_1       -1    // to be determine 
-    #define EPM_PIN_2       -1    // to be determine
-    #define EPM_SUPPORTED   false
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-    #define EPM_PIN_1       -1    // to be determine 
+    #define EPM_PIN_1       -1    // to be determine
     #define EPM_PIN_2       -1    // to be determine
     #define EPM_SUPPORTED   false
 #else
@@ -40,7 +36,7 @@
 #endif
 
 /// @class	AP_EPM
-/// @brief	Class to manage the EPM_CargoGripper 
+/// @brief	Class to manage the EPM_CargoGripper
 class AP_EPM {
 public:
     AP_EPM();

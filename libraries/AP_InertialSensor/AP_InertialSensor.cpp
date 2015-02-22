@@ -16,9 +16,9 @@ extern const AP_HAL::HAL& hal;
 const AP_Param::GroupInfo AP_InertialSensor::var_info[] PROGMEM = {
     // @Param: PRODUCT_ID
     // @DisplayName: IMU Product ID
-    // @Description: Which type of IMU is installed (read-only). 
+    // @Description: Which type of IMU is installed (read-only).
     // @User: Advanced
-    // @Values: 0:Unknown,1:APM1-1280,2:APM1-2560,88:APM2,3:SITL,4:PX4v1,5:PX4v2,256:Flymaple,257:Linux
+    // @Values: 0:Unknown,1:APM1-1280,2:APM1-2560,88:APM2,3:SITL,4:PX4v1,5:PX4v2,257:Linux
     AP_GROUPINFO("PRODUCT_ID",  0, AP_InertialSensor, _product_id,   0),
 
     // @Param: ACCSCAL_X
@@ -109,7 +109,7 @@ AP_InertialSensor::AP_InertialSensor() :
     _gyro(),
     _board_orientation(ROTATION_NONE)
 {
-    AP_Param::setup_object_defaults(this, var_info);        
+    AP_Param::setup_object_defaults(this, var_info);
 }
 
 void
@@ -396,9 +396,9 @@ AP_InertialSensor::_init_accel()
             // null gravity from the Z accel
             accel_offset[k].z += GRAVITY_MSS;
 
-            total_change[k] = 
-                fabsf(prev[k].x - accel_offset[k].x) + 
-                fabsf(prev[k].y - accel_offset[k].y) + 
+            total_change[k] =
+                fabsf(prev[k].x - accel_offset[k].x) +
+                fabsf(prev[k].y - accel_offset[k].y) +
                 fabsf(prev[k].z - accel_offset[k].z);
             max_offset[k] = (accel_offset[k].x > accel_offset[k].y) ? accel_offset[k].x : accel_offset[k].y;
             max_offset[k] = (max_offset[k] > accel_offset[k].z) ? max_offset[k] : accel_offset[k].z;
@@ -406,7 +406,7 @@ AP_InertialSensor::_init_accel()
 
         uint8_t num_converged = 0;
         for (uint8_t k=0; k<num_accels; k++) {
-            if (total_change[k] <= AP_INERTIAL_SENSOR_ACCEL_TOT_MAX_OFFSET_CHANGE && 
+            if (total_change[k] <= AP_INERTIAL_SENSOR_ACCEL_TOT_MAX_OFFSET_CHANGE &&
                 max_offset[k] <= AP_INERTIAL_SENSOR_ACCEL_MAX_OFFSET) {
                 num_converged++;
             }
@@ -554,7 +554,7 @@ bool AP_InertialSensor::_calibrate_accel( Vector3f accel_sample[6],
     // reset
     beta[0] = beta[1] = beta[2] = 0;
     beta[3] = beta[4] = beta[5] = 1.0f/GRAVITY_MSS;
-    
+
     while( num_iterations < 20 && change > eps ) {
         num_iterations++;
 
@@ -610,7 +610,7 @@ void AP_InertialSensor::_calibrate_update_matrices(float dS[6], float JS[6][6],
     float dx, b;
     float residual = 1.0;
     float jacobian[6];
-    
+
     for( j=0; j<3; j++ ) {
         b = beta[3+j];
         dx = (float)data[j] - beta[j];
@@ -618,7 +618,7 @@ void AP_InertialSensor::_calibrate_update_matrices(float dS[6], float JS[6][6],
         jacobian[j] = 2.0f*b*b*dx;
         jacobian[3+j] = -2.0f*b*dx*dx;
     }
-    
+
     for( j=0; j<6; j++ ) {
         dS[j] += jacobian[j]*residual;
         for( k=0; k<6; k++ ) {
@@ -665,7 +665,7 @@ void AP_InertialSensor::_calibrate_find_delta(float dS[6], float JS[6][6], float
     for( i=5; i>=0; i-- ) {
         dS[i] /= JS[i][i];
         JS[i][i] = 1.0f;
-        
+
         for( j=0; j<i; j++ ) {
             mu = JS[i][j];
             dS[j] -= mu*dS[i];

@@ -32,7 +32,7 @@
 
 #include <vectorN.h>
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 #include <systemlib/perf_counter.h>
 #endif
 
@@ -434,7 +434,7 @@ private:
     Vector3f velDotNEDfilt;         // low pass filtered velDotNED
     uint32_t lastAirspeedUpdate;    // last time airspeed was updated
     uint32_t imuSampleTime_ms;      // time that the last IMU value was taken
-    ftype gpsCourse;                // GPS ground course angle(rad) 
+    ftype gpsCourse;                // GPS ground course angle(rad)
     ftype gpsGndSpd;                // GPS ground speed (m/s)
     bool newDataGps;                // true when new GPS data has arrived
     bool newDataMag;                // true when new magnetometer data has arrived
@@ -519,7 +519,7 @@ private:
 	} mag_state;
 
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_PX4 || CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
     // performance counters
     perf_counter_t  _perf_UpdateFilter;
     perf_counter_t  _perf_CovariancePrediction;
@@ -528,12 +528,12 @@ private:
     perf_counter_t  _perf_FuseAirspeed;
     perf_counter_t  _perf_FuseSideslip;
 #endif
-    
+
     // should we assume zero sideslip?
     bool assume_zero_sideslip(void) const;
 };
 
-#if CONFIG_HAL_BOARD != HAL_BOARD_PX4 && CONFIG_HAL_BOARD != HAL_BOARD_VRBRAIN
+#if CONFIG_HAL_BOARD != HAL_BOARD_PX4
 #define perf_begin(x)
 #define perf_end(x)
 #endif

@@ -30,7 +30,6 @@ AVR_OBJCOPY :=  $(call FIND_TOOL,avr-objcopy)
 AVRDUDE      :=  $(call FIND_TOOL,avrdude)
 AVARICE      :=  $(call FIND_TOOL,avarice)
 
-# Tools for Maple/Flymaple
 # Toolchain is expected to be on the PATH
 ARM_CXX     :=  $(call FIND_TOOL,arm-none-eabi-g++)
 ARM_CC      :=  $(call FIND_TOOL,arm-none-eabi-gcc)
@@ -39,24 +38,6 @@ ARM_AR      :=  $(call FIND_TOOL,arm-none-eabi-ar)
 ARM_LD      :=  $(call FIND_TOOL,arm-none-eabi-g++)
 ARM_GDB     :=  $(call FIND_TOOL,arm-none-eabi-gdb)
 ARM_OBJCOPY :=  $(call FIND_TOOL,arm-none-eabi-objcopy)
-
-# toolchains for beagleboneblack
-BBONE_CXX     :=  arm-linux-gnueabihf-g++-4.7
-BBONE_CC      :=  arm-linux-gnueabihf-gcc-4.7
-BBONE_AS      :=  arm-linux-gnueabihf-gcc-4.7
-BBONE_AR      :=  ar
-BBONE_LD      :=  arm-linux-gnueabihf-g++-4.7
-BBONE_GDB     :=  gdb
-BBONE_OBJCOPY :=  objcopy
-
-# toolchains for Raspberry Pi
-RPI_CXX     :=  arm-linux-gnueabihf-g++
-RPI_CC      :=  arm-linux-gnueabihf-gcc
-RPI_AS      :=  arm-linux-gnueabihf-gcc
-RPI_AR      :=  arm-linux-gnueabihf-ar
-RPI_LD      :=  arm-linux-gnueabihf-g++
-RPI_GDB     :=  arm-linux-gnueabihf-gdb
-RPI_OBJCOPY :=  arm-linux-gnueabihf-obj
 
 # enable ccache if installed
 CCACHE :=  $(call FIND_TOOL,ccache)

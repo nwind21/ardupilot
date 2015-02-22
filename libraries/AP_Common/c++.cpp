@@ -9,7 +9,7 @@
 #include <AP_HAL.h>
 #include <stdlib.h>
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_APM1 || CONFIG_HAL_BOARD == HAL_BOARD_APM2 || CONFIG_HAL_BOARD == HAL_BOARD_FLYMAPLE
+#if CONFIG_HAL_BOARD == HAL_BOARD_APM1 || CONFIG_HAL_BOARD == HAL_BOARD_APM2
 
 void * operator new(size_t size)
 {
@@ -22,11 +22,9 @@ void operator delete(void *p)
 }
 
 // Conflicts with libmaple wirish/cxxabi-compat.cpp
-#if CONFIG_HAL_BOARD != HAL_BOARD_FLYMAPLE
 extern "C" void __cxa_pure_virtual(){
     while (1){}
 }
-#endif
 
 void * operator new[](size_t size)
 {
@@ -53,4 +51,3 @@ void __cxa_guard_abort (__guard *) {
 };
 
 #endif // CONFIG_HAL_BOARD
-

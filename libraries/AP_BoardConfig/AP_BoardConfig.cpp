@@ -36,8 +36,6 @@
 #define BOARD_PWM_COUNT_DEFAULT 4
 #define BOARD_SER1_RTSCTS_DEFAULT 2
 #endif
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-
 #endif
 
 extern const AP_HAL::HAL& hal;

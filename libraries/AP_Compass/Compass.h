@@ -14,7 +14,6 @@
 #define AP_COMPASS_TYPE_HMC5843  0x02
 #define AP_COMPASS_TYPE_HMC5883L 0x03
 #define AP_COMPASS_TYPE_PX4      0x04
-#define AP_COMPASS_TYPE_VRBRAIN  0x05
 
 // motor compensation types (for use with motor_comp_enabled)
 #define AP_COMPASS_MOT_COMP_DISABLED    0x00
@@ -26,16 +25,12 @@
 # define MAG_BOARD_ORIENTATION ROTATION_ROLL_180
 #elif CONFIG_HAL_BOARD == HAL_BOARD_APM2
 # define MAG_BOARD_ORIENTATION ROTATION_NONE
-#elif CONFIG_HAL_BOARD == HAL_BOARD_FLYMAPLE
-# define MAG_BOARD_ORIENTATION ROTATION_NONE
 #elif CONFIG_HAL_BOARD == HAL_BOARD_PX4
 # define MAG_BOARD_ORIENTATION ROTATION_NONE
 #elif CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
 # define MAG_BOARD_ORIENTATION ROTATION_NONE
 #elif CONFIG_HAL_BOARD == HAL_BOARD_LINUX
 # define MAG_BOARD_ORIENTATION ROTATION_YAW_90
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-# define MAG_BOARD_ORIENTATION ROTATION_NONE
 #else
 # error "You must define a default compass orientation for this board"
 #endif
@@ -46,8 +41,6 @@
  */
 #if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 #define COMPASS_MAX_INSTANCES 3
-#elif CONFIG_HAL_BOARD == HAL_BOARD_VRBRAIN
-#define COMPASS_MAX_INSTANCES 2
 #else
 #define COMPASS_MAX_INSTANCES 1
 #endif
@@ -73,7 +66,7 @@ public:
     ///
     virtual bool read(void) = 0;
 
-    
+
 
     /// use spare CPU cycles to accumulate values from the compass if
     /// possible
