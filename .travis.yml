@@ -8,3 +8,4 @@ script:
   - ls
   - cd ArduCopter
   - make configure
+  - make px4-v2
