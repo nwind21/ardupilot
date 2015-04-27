@@ -5,4 +5,4 @@ before_install:
   -  APMDIR=$(pwd) && pushd .. && $APMDIR/Tools/scripts/install-prereqs-ubuntu.sh -y && . ~/.profile && popd
 
 script: 
-  - cd ./ardupilot/ArduCopter
+  - cd ./nwind21/ardupilot/ArduCopter
