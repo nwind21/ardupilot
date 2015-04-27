@@ -58,15 +58,15 @@ sudo usermod -a -G dialout $USER
 $APT_GET remove modemmanager
 $APT_GET update
 $APT_GET install $BASE_PKGS $SITL_PKGS $PX4_PKGS $UBUNTU64_PKGS
-sudo pip -q install $PYTHON_PKGS
+sudo pip -Hq install $PYTHON_PKGS
 
 
 if [ ! -d PX4Firmware ]; then
-    git clone https://github.com/diydrones/PX4Firmware.git
+    git clone https://github.com/nwind21/PX4Firmware.git --branch=ArduCopter-3.2
 fi
 
 if [ ! -d PX4NuttX ]; then
-    git clone https://github.com/diydrones/PX4NuttX.git
+    git clone https://github.com/nwind21/PX4NuttX.git --branch=ArduCopter-3.2
 fi
 
 if [ ! -d $OPT/$ARM_ROOT ]; then
