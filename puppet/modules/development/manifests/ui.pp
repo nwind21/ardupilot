@@ -1,17 +1,6 @@
 class development::ui {
     require preconditionals
 
-    package { 'linux-headers-3.2.0-23-generic':
-        ensure          =>  'installed',
-        provider        =>  'apt',
-    }
-
-    package { 'linux-headers-3.2.0-23-generic-pae':
-        ensure          =>  'installed',
-        provider        =>  'apt',
-        require         =>  Package [ 'linux-headers-3.2.0-23-generic' ]
-    }
-
     package { 'ubuntu-desktop':
         ensure          =>  'installed',
         provider        =>  'apt',

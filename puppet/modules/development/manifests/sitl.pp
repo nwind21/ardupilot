@@ -34,19 +34,6 @@ class development::sitl {
         require         =>    Package [ 'python-pip' ]
     }
 
-    file_line { 'autotest-path':
-        line  => 'export PATH=$PATH:/home/vagrant/ardupilot/Tools/autotest',
-        path  => '/home/vagrant/.profile'
-    }
-    file_line { 'MAVProxy-path':
-        line  => 'export PATH=$PATH:/home/vagrant/MAVProxy',
-        path  => '/home/vagrant/.profile'
-    }
-    file_line { 'MAVProxy-path-examples':
-        line  => 'export PATH=$PATH:/home/vagrant/mavlink/pymavlink/examples',
-        path  => '/home/vagrant/.profile'
-    }
-
     common::netinstall{ 'zeromq-4':
         url                  =>   'http://download.zeromq.org/zeromq-4.0.4.tar.gz',
         extracted_dir        =>   'zeromq-4.0.4',
@@ -58,9 +45,4 @@ class development::sitl {
         require         =>   Package [ 'python-pip' ]
     }
 
-    package { 'flightgear':
-        ensure          =>  'installed',
-        provider        =>  'apt',
-    }
-    
 }

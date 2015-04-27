@@ -9,11 +9,6 @@ class development::desktop {
         mode        =>  '777',
         require     =>  File [ '/home/vagrant/Desktop' ]
     }
-    file { '/home/vagrant/Desktop/Eclipse.desktop':
-        source      => 'puppet:///modules/development/Eclipse.desktop',
-        mode        =>  '777',
-        require     =>  File [ '/home/vagrant/Desktop' ]
-    }
     file { [ '/home/vagrant/.gconf',
              '/home/vagrant/.gconf/desktop',
              '/home/vagrant/.gconf/desktop/gnome',
