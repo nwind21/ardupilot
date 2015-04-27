@@ -79,5 +79,5 @@ echo $exportline2 >> ~/.profile
 echo $PATH
 ls -l $OPT/$ARM_ROOT/bin
 $OPT/$ARM_ROOT/bin/arm-none-eabi-gcc --version
-Status API Training Shop Blog About
-© 2015 GitHub, Inc. Terms Privacy Security Contact
+
+
