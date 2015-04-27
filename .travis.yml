@@ -6,3 +6,5 @@ before_install:
 
 script: 
   - ls
+  - cd ArduCopter
+  - make configure
