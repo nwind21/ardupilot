@@ -1,4 +1,5 @@
 language: cpp
+sudo: required
 
 before_install:
   - cd .. && ./ardupilot/Tools/scripts/install-prereqs-ubuntu.sh -y && . ~/.profile
