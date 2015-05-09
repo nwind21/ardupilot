@@ -1,4 +1,4 @@
-class profile::aws ( $user = vagrant ) {
+class profile::base ( $user = vagrant ) {
 
 	# MAVPROXY PATHS
     file_line { 'autotest-path':
@@ -13,15 +13,15 @@ class profile::aws ( $user = vagrant ) {
         line  => 'export PATH=$PATH:/home/vagrant/mavlink/pymavlink/examples',
         path  => "/home/${user}/.profile"
     }
-	
+
 	# CCACHE PATHS
     file_line { 'ccache-path':
-        line  => 'export PATH=/usr/lib/ccache:$PATH',
+        line  => 'export PATH=$PATH:/usr/lib/ccache',
         path  => "/home/${user}/.profile"
     }
-	
+
     file_line { 'gcc-arm-path':
-        line  => 'export PATH=/home/vagrant/gcc-arm-none-eabi-4_8-2013q4/bin:$PATH',
+        line  => 'export PATH=$PATH:/home/vagrant/gcc-arm-none-eabi-4_8-2013q4/bin',
         path  => "/home/${user}/.profile"
-    } 
+    }
 }

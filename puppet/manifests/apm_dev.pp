@@ -2,8 +2,12 @@ Exec {path => [ "/usr/local/bin/", "/bin/", "/usr/bin/", "usr/sbin/", "/sbin/", 
 
 
 include development::ui
-include development::base
 include development::sitl
 include development::px4
 include development::desktop
-include profile::vagrant
+class { 'development::base':
+	user => "vagrant",
+}
+class { 'profile::base':
+	user => "vagrant",
+}

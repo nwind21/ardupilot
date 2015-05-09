@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
         trusty64.vm.synced_folder(".", "/home/vagrant/ardupilot" )
         trusty64.vm.synced_folder("../PX4Firmware", "/home/vagrant/PX4Firmware" )
         trusty64.vm.synced_folder("../PX4NuttX", "/home/vagrant/PX4NuttX" )
-        trusty64.vm.synced_folder("../../mavlink/mavlink", "/home/vagrant/mavlink" )
+        trusty64.vm.synced_folder("../mavlink", "/home/vagrant/mavlink" )
 
         trusty64.vm.provision "shell", inline: "cp /home/vagrant/ardupilot/puppet/Puppetfile /tmp"
         trusty64.vm.provision "shell", inline: "cp -R /home/vagrant/ardupilot/puppet/modules /tmp"

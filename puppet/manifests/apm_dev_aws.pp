@@ -7,7 +7,7 @@ include development::px4
 class { 'development::base':
 	user => "ubuntu",
 }
-class { 'profile::aws':
+class { 'profile::base':
 	user => "ubuntu",
 }
 
@@ -15,4 +15,3 @@ class { 'profile::aws':
 class { 'ci::flask' }
 class { 'ci::lighttpd' }
 class { 'ci::java' }
-

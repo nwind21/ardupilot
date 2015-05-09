@@ -6,17 +6,17 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'python-argparse':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'openocd':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'flex':
         ensure          =>  'installed',
         provider        =>  'apt',
@@ -26,17 +26,17 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'libncurses5-dev':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'autoconf':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'texinfo':
         ensure          =>  'installed',
         provider        =>  'apt',
@@ -46,7 +46,7 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'libtool':
         ensure          =>  'installed',
         provider        =>  'apt',
@@ -56,17 +56,17 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'zlib1g-dev':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'zip':
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-    
+
     package { 'genromfs':
         ensure          =>  'installed',
         provider        =>  'apt',
@@ -76,7 +76,7 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-	
+
     package { 'libc6:i386':
         ensure          =>  'installed',
         provider        =>  'apt',
@@ -91,7 +91,7 @@ class development::px4 {
         ensure          =>  'installed',
         provider        =>  'apt',
     }
-	
+
     common::netinstall{ 'gcc-arm-none-eabi-4_8-2013q4':
         url                  =>   'https://launchpad.net/gcc-arm-embedded/4.8/4.8-2013-q4-major/+download/gcc-arm-none-eabi-4_8-2013q4-20131204-linux.tar.bz2',
         extracted_dir        =>   'gcc-arm-none-eabi-4_8-2013q4',

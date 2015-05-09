@@ -2,24 +2,33 @@ class development::sitl {
 
     require preconditionals
 
+    package { 'python-dev':
+        ensure          =>  'installed',
+        provider        =>  'apt',
+    }
+
     package { 'python-wxgtk2.8':
         ensure          =>  'installed',
         provider        =>  'apt',
+		require			=>  Package [ 'python-dev' ]
     }
 
     package { 'python-scipy':
         ensure          =>  'installed',
         provider        =>  'apt',
+		require			=>  Package [ 'python-dev' ]
     }
 
     package { 'python-opencv':
         ensure          =>  'installed',
         provider        =>  'apt',
+		require			=>  Package [ 'python-dev' ]
     }
 
     package { 'python-pip':
         ensure          =>  'installed',
         provider        =>  'apt',
+		require			=>  Package [ 'python-dev' ]
     }
 
     exec { 'pip-pymavlink':
