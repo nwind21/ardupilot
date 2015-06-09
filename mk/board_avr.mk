@@ -2,7 +2,7 @@ $(info > in mk/board_avr.mk )
 
 TOOLCHAIN = AVR
 
-include $(MK_DIR)/find_arduino.mk
+# include $(MK_DIR)/find_arduino.mk
 include $(MK_DIR)/find_tools.mk
 
 #
