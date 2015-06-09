@@ -17,24 +17,23 @@ class development::base ( $user = vagrant ) {
     }
 
     # Need to build gtest after gmock so set an explicit dependency chain
-#    common::netinstall{ 'install_gmock':
-#        url                  =>   'https://googlemock.googlecode.com/files/gmock-1.7.0.zip',
-#        extracted_dir        =>   'gmock-1.7.0',
-#        destination_dir      =>   "/home/${user}",
-#        extract_command      =>   'unzip',
-#        postextract_command  =>   'g',
-#   } ->
-#    exec { 'build_gtest':
-#        cwd             =>  '/usr/src/gmock/gtest',
-#        command         =>  'mkdir build && mkdir /usr/include/gtest && cmake -E chdir build cmake .. && cmake --build build && cp build/libgtest* /usr/local/lib && cp -R include/gtest/* /usr/include/gtest',
-#        path            =>  '/usr/bin:/usr/sbin:/sbin:/bin',
-#    }
-
-
-#    package { 'arduino-core':
-#        ensure          =>  'installed',
-#        provider        =>  'apt',
-#    }
+    common::netinstall{ 'install_gmock':
+        url                  =>   'https://googlemock.googlecode.com/files/gmock-1.7.0.zip',
+        extracted_dir        =>   'gmock-1.7.0',
+        destination_dir      =>   "/home/${user}",
+        extract_command      =>   'unzip',
+        postextract_command  =>   "/home/${user}/gmock-1.7.0/configure && make > /home/${user}/gmock-1.7.0/vagrant.install",
+    } ->
+    exec { 'build_gtest':
+        cwd             =>  "/home/${user}/gmock-1.7.0/gtest",
+        command         =>  'mkdir build && cmake -E chdir build cmake .. && cmake --build build',
+        path            =>  '/usr/bin:/usr/sbin:/sbin:/bin',
+        creates         =>  "/home/${user}/gmock-1.7.0/gtest/lib/.libs/libgtest.a"
+    }  ->
+    exec { 'copy-files':
+      command         =>  "cp /home/${user}/gmock-1.7.0/gtest/lib/.libs/* /usr/lib && cp /home/${user}/gmock-1.7.0/lib/.libs/* /usr/lib",
+      path            =>  '/usr/bin:/usr/sbin:/sbin:/bin',
+    }
 
     package { 'curl':
         ensure          =>  'installed',
