@@ -862,7 +862,6 @@ def setup_rc(mavproxy):
     # zero throttle
     mavproxy.send('rc 3 1000\n')
 
-
 def fly_ArduCopter(viewerip=None, map=False):
     '''fly ArduCopter in SIL
 
@@ -891,7 +890,7 @@ def fly_ArduCopter(viewerip=None, map=False):
     print( "==== pysim/ArduCopter.py:  Loading MAVProxy ====" )
     mavproxy = util.start_MAVProxy_SIL('ArduCopter', options='--sitl=127.0.0.1:5501 --out=127.0.0.1:19550 --quadcopter')
     mavproxy.expect('Received [0-9]+ parameters')
-    
+
     # setup test parameters
     print( "==== pysim/ArduCopter.py:  Loading copter_params.parm ====" )
     mavproxy.send("param load %s/copter_params.parm\n" % testdir)
@@ -901,6 +900,9 @@ def fly_ArduCopter(viewerip=None, map=False):
     print( "==== pysim/ArduCopter.py:  Killing mavproxy and sil ====" )
     util.pexpect_close(mavproxy)
     util.pexpect_close(sil)
+
+    print( "==== pysim/ArduCopter.py:  Waiting for all termination ====" )
+    time.sleep( 5 );
 
     print( "==== pysim/ArduCopter.py:  Rebooting sil now ====" )
     sil = util.start_SIL('ArduCopter', height=HOME.alt)
@@ -969,7 +971,90 @@ def fly_ArduCopter(viewerip=None, map=False):
             print(failed_test_msg)
             failed = True
 
+        # Throttle Failsafe
+        print("#")
+        print("########## Test Failsafe ##########")
+        print("#")
+
+        # Takeoff
+        print("# Takeoff")
+        if not takeoff(mavproxy, mav, 10):
+            failed_test_msg = "takeoff failed"
+            print(failed_test_msg)
+            failed = True
+
+        print("# Throttle failsafe")
+        if not fly_throttle_failsafe(mavproxy, mav):
+            failed_test_msg = "fly_throttle_failsafe failed"
+            print(failed_test_msg)
+            failed = True
+
+        # Takeoff
+        print("# Takeoff")
+        if not takeoff(mavproxy, mav, 10):
+            failed_test_msg = "takeoff failed"
+            print(failed_test_msg)
+            failed = True
+
+        # Battery failsafe
+        print("# Battery failsafe")
+        if not fly_battery_failsafe(mavproxy, mav):
+            failed_test_msg = "fly_battery_failsafe failed"
+            print(failed_test_msg)
+            failed = True
+
+        print("# Land")
+        if not land(mavproxy, mav):
+            failed_test_msg = "land failed"
+            print(failed_test_msg)
+            failed = True
+
+        '''
         # Fly a square in Stabilize mode
+
+#            mavproxy.send('wp clear\n')
+#        print("CLEARING WP's")
+
+        print("# Takeoff")
+        if not takeoff(mavproxy, mav, 10):
+            failed_test_msg = "takeoff failed"
+            print(failed_test_msg)
+            failed = True
+
+        print("# Land")
+        if not land(mavproxy, mav):
+            failed_test_msg = "land failed"
+            print(failed_test_msg)
+            failed = True
+
+        # Throttle Failsafe
+        print("#")
+        print("########## Test Failsafe ##########")
+        print("#")
+        if not fly_throttle_failsafe(mavproxy, mav):
+            failed_test_msg = "fly_throttle_failsafe failed"
+            print(failed_test_msg)
+            failed = True
+
+        # Takeoff
+        print("# Takeoff")
+        if not takeoff(mavproxy, mav, 10):
+            failed_test_msg = "takeoff failed"
+            print(failed_test_msg)
+            failed = True
+
+        # Battery failsafe
+        if not fly_battery_failsafe(mavproxy, mav):
+            failed_test_msg = "fly_battery_failsafe failed"
+            print(failed_test_msg)
+            failed = True
+
+        print("# Land")
+        if not land(mavproxy, mav):
+            failed_test_msg = "land failed"
+            print(failed_test_msg)
+            failed = True
+
         print("#")
         print("########## Fly a square and save WPs with CH7 switch ##########")
         print("#")
@@ -989,24 +1074,71 @@ def fly_ArduCopter(viewerip=None, map=False):
             failed_test_msg = "land failed"
             print(failed_test_msg)
             failed = True
-            
-        print("# Save landing WP...")
-        save_wp(mavproxy, mav)
-        print("# ...Landing WP saved")
 
-        # save the stored mission to file
-        print("# Save out the CH7 mission to file")
-        if not save_mission_to_file(mavproxy, mav, os.path.join(testdir, "ch7_mission.txt")):
-            failed_test_msg = "save_mission_to_file failed"
+
+            print("# Save landing WP...")
+            save_wp(mavproxy, mav)
+            print("# ...Landing WP saved")
+
+            # save the stored mission to file
+            print("# Save out the CH7 mission to file")
+            if not save_mission_to_file(mavproxy, mav, os.path.join(testdir, "ch7_mission.txt")):
+                failed_test_msg = "save_mission_to_file failed"
+                print(failed_test_msg)
+                failed = True
+                break
+
+            # fly the stored mission
+            print("# Fly CH7 saved mission")
+            if not fly_mission(mavproxy, mav,height_accuracy = 0.5, target_altitude=10):
+                failed_test_msg = "fly_mission failed"
+                print(failed_test_msg)
+                failed = True
+                break
+
+
+        # Loiter for 10 seconds
+        print("#")
+        print("########## Test Loiter for 10 seconds ##########")
+        print("#")
+
+        print("# Takeoff")
+        if not takeoff(mavproxy, mav, 10):
+            failed_test_msg = "takeoff failed"
             print(failed_test_msg)
             failed = True
 
-        # fly the stored mission
-        print("# Fly CH7 saved mission")
-        if not fly_mission(mavproxy, mav,height_accuracy = 0.5, target_altitude=10):
-            failed_test_msg = "fly_mission failed"
+        if not loiter(mavproxy, mav):
+            failed_test_msg = "loiter failed"
             print(failed_test_msg)
             failed = True
+
+        # Loiter Climb
+        print("#")
+        print("# Loiter - climb to 30m")
+        print("#")
+        if not change_alt(mavproxy, mav, 30):
+            failed_test_msg = "change_alt climb failed"
+            print(failed_test_msg)
+            failed = True
+
+
+        # Loiter Descend
+        print("#")
+        print("# Loiter - descend to 20m")
+        print("#")
+        if not change_alt(mavproxy, mav, 20):
+            failed_test_msg = "change_alt descend failed"
+            print(failed_test_msg)
+            failed = True
+
+
+        print("# Land")
+        if not land(mavproxy, mav):
+            failed_test_msg = "land failed"
+            print(failed_test_msg)
+            failed = True
+
 
         # Throttle Failsafe
         print("#")
@@ -1249,6 +1381,7 @@ def fly_ArduCopter(viewerip=None, map=False):
             failed = True
         logend = time.time()
         print( "LOG DOWNLOAD TIME: " + str(logend-logstart) + "s" );
+        '''
 
     except pexpect.TIMEOUT, failed_test_msg:
         failed_test_msg = "Timeout"
@@ -1271,8 +1404,9 @@ def fly_ArduCopter(viewerip=None, map=False):
     # This flag tells me that I need to copy the data out
     if copyTLog:
         shutil.copy(logfile, buildlog)
-        
+
     if failed:
+        print("ITERATION: " + str(x) )
         print("FAILED: %s" % failed_test_msg)
         return False
     return True

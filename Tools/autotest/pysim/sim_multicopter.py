@@ -57,18 +57,23 @@ def sim_send(fd, m, a):
             raise
 
 
-def sim_recv(fd, m):
+def sim_recv(fd, m, out=None):
     '''receive control information from SITL'''
     try:
         buf = fd.recv(28)
     except socket.error as e:
         if not e.errno in [ errno.EAGAIN, errno.EWOULDBLOCK ]:
-            print( e.errno ) 
+            print( e.errno )
             raise
         return False
 
     if len(buf) != 28 :
         return False
+
+    # Log to file
+    if out:
+        out.write( buf )
+
     control = list(struct.unpack('<14H', buf))
     pwm = control[0:11]
 
@@ -157,24 +162,26 @@ print("[SIM] Starting at lat=%f lon=%f alt=%.1f heading=%.1f" % (
     a.yaw))
 
 def receiveThread( context ):
-    address = 'tcp://' + sim_in_address[0] + ":" + str(sim_in_address[1]) 
+    f = None
+    #f = open( 'sim_in.bin', 'wb')
+    address = 'tcp://' + sim_in_address[0] + ":" + str(sim_in_address[1])
     print( "[SIM] receiveThread up!" )
     print( "[SIM] receiveThread connecting publisher @ " + address + ":" )
     sim_in = context.socket( zmq.SUB )
     sim_in.connect(address)
     sim_in.setsockopt(zmq.SUBSCRIBE, b'')
-    
+
     sim_kill = context.socket( zmq.SUB )
     sim_kill.connect('inproc://kill')
     sim_kill.setsockopt(zmq.SUBSCRIBE, b"")
 
     sim_sync = context.socket( zmq.REQ )
     sim_sync.connect('inproc://sync')
-    
+
     # Send up signal
     sim_sync.send( b'' )
     sim_sync.recv( )
-    
+
     poll = zmq.Poller()
     poll.register(sim_kill, zmq.POLLIN)
     poll.register(sim_in,  zmq.POLLIN)
@@ -183,7 +190,7 @@ def receiveThread( context ):
     while True:
         sockets = dict(poll.poll())
         if sockets.get(sim_in) == zmq.POLLIN:
-            if sim_recv(sim_in, m) == True:
+            if sim_recv(sim_in, m, f) == True:
                 cnt += 1
             m2 = m[:]
             a.update(m2)
@@ -192,6 +199,7 @@ def receiveThread( context ):
             sim_kill.close()
             break
 
+    # f.close()
     print( "[SIM] receiveThread, " + str(cnt) + "p " )
     print( "[SIM] receiveThread is exiting" )
     sim_sync.send( b'' )
@@ -204,18 +212,18 @@ def sendThread( context ):
     print( "[SIM] sendThread binding as publisher @ " + address )
     sim_out = context.socket( zmq.PUB )
     sim_out.bind( address )
-    
+
     sim_kill = context.socket( zmq.SUB )
     sim_kill.connect('inproc://kill')
     sim_kill.setsockopt(zmq.SUBSCRIBE, b"")
-    
+
     sim_sync = context.socket( zmq.REQ )
     sim_sync.connect('inproc://sync')
-    
+
     # Send up signal
     sim_sync.send( b'' )
     sim_sync.recv( )
-    
+
     poll = zmq.Poller()
     poll.register(sim_kill, zmq.POLLIN)
     poll.register(sim_out,  zmq.POLLOUT)
@@ -232,8 +240,8 @@ def sendThread( context ):
             sim_out.close()
             sim_kill.close()
             break
-        # 200Hz
-        #time.sleep( 0.015 )
+        # 100Hz
+        time.sleep( 0.01 )
         loopcnt += 1
 
     logend = time.time()
@@ -290,4 +298,3 @@ sim_sync.close()
 zmqContext.term()
 print( "[SIM] Exited." )
 exit( 0 )
-
