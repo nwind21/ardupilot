@@ -23,7 +23,7 @@
 #include <AP_Param.h>
 
 extern AVR_SITL::SITLUARTDriver sitlUart0Driver;
-    
+
 #ifdef __CYGWIN__
 #include <stdio.h>
 #include <signal.h>
@@ -206,9 +206,9 @@ void SITL_State::_set_param_default(char *parm)
  */
 void SITL_State::_sitl_setup(void)
 {
-#ifndef __CYGWIN__
+
 	_parent_pid = getppid();
-#endif
+
 //	_rcout_addr.sin_family = AF_INET;
 //	_rcout_addr.sin_port = htons(_rcout_port);
 //	inet_pton(AF_INET, "127.0.0.1", &_rcout_addr.sin_addr);
@@ -317,7 +317,7 @@ void SITL_State::_sitl_setup(void)
     uint32_t now = hal.scheduler->micros();
     while ( hal.scheduler->micros() - now < 1000000 );
 
-	_setup_timer();
+    _setup_timer();
     _setup_mavlink_rctx();
     fprintf( stderr,
              "SITL_State::_sitl_setup => complete\n" );
@@ -498,7 +498,7 @@ void* SITL_State::_fdmSubscriber( void* arg )
     if ( rc != 0 )
     {
         fprintf( stderr,
-                 "[ %d ] WARN => linger could not be set\n", ctx->id );    
+                 "[ %d ] WARN => linger could not be set\n", ctx->id );
     }
     zmq_close( _fdm_subscriber );
     zmq_close( _fdm_kill_subscriber );
@@ -558,7 +558,7 @@ void SITL_State::_setup_zmq_fdm(void)
         fprintf( stderr, "SITL_State::_setup_zmq_fdm => failed to zmq_bind publisher.\n" );
         exit( 1 );
     }
-        
+
 
 
     _sitl_zmq_fdm_kill = zmq_socket( _zmq_context,
@@ -603,6 +603,7 @@ void SITL_State::_timer_handler(int signum)
 #ifndef __CYGWIN__
 	/* make sure we die if our parent dies */
 	if (kill(_parent_pid, 0) != 0){
+    //fprintf( stderr, "!!!!! DIED !!!!");
 		exit(1);
 	}
 #else
@@ -612,7 +613,7 @@ void SITL_State::_timer_handler(int signum)
 
     count++;
 	if (hal.scheduler->millis() - last_report > 1000) {
-		fprintf(stdout, "TH %u cps\n", count);
+		//fprintf(stdout, "TH %u cps\n", count);
 	//	print_trace();
 		count = 0;
 		last_report = hal.scheduler->millis();
@@ -691,27 +692,30 @@ void SITL_State::service_fdm( void* subscriber, sitl_fdm& fdm )
                      0 );
     switch (size) {
     case 140:
+        {
+            if (fg_pkt.magic != 0x4c56414f) {
+                fprintf(stdout, "Bad FDM packet - magic=0x%08x\n", fg_pkt.magic);
+                return;
+            }
 
-        if (fg_pkt.magic != 0x4c56414f) {
-            fprintf(stdout, "Bad FDM packet - magic=0x%08x\n", fg_pkt.magic);
-            return;
-        }
+            if (fg_pkt.latitude == 0 ||
+                fg_pkt.longitude == 0 ||
+                fg_pkt.altitude <= 0) {
+                // garbage input
+                return;
+            }
 
-        if (fg_pkt.latitude == 0 ||
-            fg_pkt.longitude == 0 ||
-            fg_pkt.altitude <= 0) {
-            // garbage input
-            return;
-        }
-
-        fdm = fg_pkt;
-        // prevent bad inputs from SIM from corrupting our state
-        double *v = &_sitl->state.latitude;
-        for (uint8_t i=0; i<17; i++) {
-                if (isinf(v[i]) || isnan(v[i]) || fabsf(v[i]) > 1.0e10) {
-                v[i] = 0;
+            fdm = fg_pkt;
+            // prevent bad inputs from SIM from corrupting our state
+            double *v = &_sitl->state.latitude;
+            for (uint8_t i=0; i<17; i++) {
+                    if (isinf(v[i]) || isnan(v[i]) || fabsf(v[i]) > 1.0e10) {
+                    v[i] = 0;
+                }
             }
         }
+        break;
+    default:
         break;
     };
 
@@ -910,7 +914,7 @@ void SITL_State::init(int argc, char * const argv[])
 
 void SITL_State::cleanup()
 {
-    
+
     // Clean up the 5760 port listen socket.
     sitlUart0Driver.end();
 
@@ -1024,5 +1028,3 @@ void SITL_State::loop_hook(void)
 
 
 #endif
-
-

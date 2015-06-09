@@ -109,8 +109,14 @@ static void failsafe_battery_event(void)
         return;
     }
 
+    if( g.failsafe_battery_enabled)
+    {
+        //gcs_send_text_P(SEVERITY_LOW,PSTR("FSBatt en"));
+    }
+
     // failsafe check
     if (g.failsafe_battery_enabled != FS_BATT_DISABLED && motors.armed()) {
+        //gcs_send_text_P(SEVERITY_LOW,PSTR("FSBtt chk"));
         switch(control_mode) {
             case STABILIZE:
             case ACRO:
@@ -164,7 +170,7 @@ static void failsafe_battery_event(void)
     set_failsafe_battery(true);
 
     // warn the ground station and log to dataflash
-    gcs_send_text_P(SEVERITY_LOW,PSTR("Low Battery!"));
+    gcs_send_text_P(SEVERITY_LOW,PSTR("Low Battery"));
     Log_Write_Error(ERROR_SUBSYSTEM_FAILSAFE_BATT, ERROR_CODE_FAILSAFE_OCCURRED);
 
 }
@@ -323,4 +329,3 @@ static void update_events()
 {
     ServoRelayEvents.update_events();
 }
-
